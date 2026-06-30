@@ -185,16 +185,19 @@ export async function DELETE(
       );
     }
     
-    // Delete related records first (cascade should handle this, but let's be explicit)
-    await db.productImage.deleteMany({ where: { productId: id } });
-    await db.productVariant.deleteMany({ where: { productId: id } });
-    await db.cartItem.deleteMany({ where: { productId: id } });
-    await db.wishlistItem.deleteMany({ where: { productId: id } });
-    
-    // Delete product
-    await db.product.delete({
-      where: { id },
-    });
+    // Remove the product and all of its dependent rows in a single transaction.
+    // Order history is PRESERVED: each OrderItem already stores a snapshot
+    // (productName, variant colour/size/price), so we only detach the product
+    // reference (productId -> NULL) instead of deleting the order line.
+    await db.$transaction([
+      db.productImage.deleteMany({ where: { productId: id } }),
+      db.productVariant.deleteMany({ where: { productId: id } }),
+      db.cartItem.deleteMany({ where: { productId: id } }),
+      db.wishlistItem.deleteMany({ where: { productId: id } }),
+      db.review.deleteMany({ where: { productId: id } }),
+      db.orderItem.updateMany({ where: { productId: id }, data: { productId: null } }),
+      db.product.delete({ where: { id } }),
+    ]);
     
     return NextResponse.json({ success: true, message: 'Product deleted successfully' });
   } catch (error) {

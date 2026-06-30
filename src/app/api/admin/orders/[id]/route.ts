@@ -85,10 +85,12 @@ export async function PUT(
             data: { quantity: { [direction]: item.quantity } },
           }).catch(() => {/* variant may have been removed; ignore */});
         }
-        await db.product.update({
-          where: { id: item.productId },
-          data: { quantity: { [direction]: item.quantity } },
-        }).catch(() => {/* product may have been removed; ignore */});
+        if (item.productId) {
+          await db.product.update({
+            where: { id: item.productId },
+            data: { quantity: { [direction]: item.quantity } },
+          }).catch(() => {/* product may have been removed; ignore */});
+        }
       }
     };
 

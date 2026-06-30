@@ -169,7 +169,7 @@ model Order {
 model OrderItem {
   id          String   @id @default(cuid())
   orderId     String
-  productId   String
+  productId   String?
   variantId   String?
   productName String
   variantName String?
@@ -181,7 +181,7 @@ model OrderItem {
   total       Float
   createdAt   DateTime @default(now())
   order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product     Product  @relation(fields: [productId], references: [id])
+  product     Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
 }
 
 model Product {
@@ -259,7 +259,7 @@ model Review {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   user           User     @relation(fields: [userId], references: [id])
-  product        Product  @relation(fields: [productId], references: [id])
+  product        Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
 }

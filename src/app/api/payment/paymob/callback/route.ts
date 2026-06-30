@@ -149,11 +149,13 @@ async function processSuccessfulPayment(
         }
       }
 
-      // Update product quantity
-      await db.product.update({
-        where: { id: item.productId },
-        data: { quantity: { decrement: item.quantity } },
-      })
+      // Update product quantity (skip if the product was deleted later)
+      if (item.productId) {
+        await db.product.update({
+          where: { id: item.productId },
+          data: { quantity: { decrement: item.quantity } },
+        })
+      }
     }
 
     return true
