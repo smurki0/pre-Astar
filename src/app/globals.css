@@ -1,0 +1,282 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* Astar - Feminine, Elegant Light Theme */
+:root {
+  --radius: 0.75rem;
+
+  /* Soft feminine palette */
+  --background: #FFFBF9;
+  --gold: #D4AF37;
+  --gold-foreground: #2B1A00;
+  --foreground: #3D3B3A;
+
+  --card: #FFFFFF;
+  --card-foreground: #3D3B3A;
+
+  --popover: #FFFFFF;
+  --popover-foreground: #3D3B3A;
+
+  /* Primary - Dusty Rose / Mauve */
+  --primary: #C4A4A4;
+  --primary-foreground: #FFFFFF;
+
+  /* Secondary - Warm Beige */
+  --secondary: #F5EDE6;
+  --secondary-foreground: #5C5552;
+
+  /* Muted - Soft Gray */
+  --muted: #F8F5F3;
+  --muted-foreground: #8A8583;
+
+  /* Accent - Blush Pink */
+  --accent: #FDE8E8;
+  --accent-foreground: #9B6B6B;
+
+  --destructive: #E57373;
+
+  /* Borders - Soft Warm Gray */
+  --border: #EBE5E0;
+  --input: #EBE5E0;
+  --ring: #C4A4A4;
+
+  /* Chart colors - Soft pastels */
+  --chart-1: #C4A4A4;
+  --chart-2: #D4B896;
+  --chart-3: #A8B5A0;
+  --chart-4: #B8C4D4;
+  --chart-5: #D4C4B8;
+
+  /* Sidebar */
+  --sidebar: #FFFBF9;
+  --sidebar-foreground: #3D3B3A;
+  --sidebar-primary: #C4A4A4;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #FDE8E8;
+  --sidebar-accent-foreground: #9B6B6B;
+  --sidebar-border: #EBE5E0;
+  --sidebar-ring: #C4A4A4;
+
+  /* Optional vars referenced by some themes/components */
+  --product-bg: #FFFFFF;
+}
+
+/* Dark Mode - Elegant Deep Tones */
+.dark {
+  --background: #141012;
+  --gold: #F2C64F;
+  --gold-foreground: #1A1410;
+  --foreground: #F5F0ED;
+
+  --card: #242220;
+  --card-foreground: #F5F0ED;
+
+  --popover: #242220;
+  --popover-foreground: #F5F0ED;
+
+  --product-bg: #242220;
+
+  /* Primary - Muted Rose */
+  --primary: #B8968A;
+  --primary-foreground: #1A1817;
+
+  /* Secondary - Warm Dark */
+  --secondary: #2E2A28;
+  --secondary-foreground: #D4CFC9;
+
+  /* Muted */
+  --muted: #2E2A28;
+  --muted-foreground: #9A9591;
+
+  /* Accent */
+  --accent: #3A3330;
+  --accent-foreground: #E8C4B8;
+
+  --destructive: #CF6679;
+
+  /* Borders */
+  --border: #3A3633;
+  --input: #3A3633;
+  --ring: #B8968A;
+
+  /* Chart colors */
+  --chart-1: #B8968A;
+  --chart-2: #C4A882;
+  --chart-3: #8FA088;
+  --chart-4: #9AA8B8;
+  --chart-5: #B8A898;
+
+  /* Sidebar */
+  --sidebar: #141012;
+  --sidebar-foreground: #F5F0ED;
+  --sidebar-primary: #B8968A;
+  --sidebar-primary-foreground: #141012;
+  --sidebar-accent: #3A3330;
+  --sidebar-accent-foreground: #E8C4B8;
+  --sidebar-border: #3A3633;
+  --sidebar-ring: #B8968A;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+  opacity: 0.5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-foreground);
+}
+
+/* Arabic font support */
+[dir="rtl"] {
+  font-family: 'Noto Sans Arabic', 'Tajawal', var(--font-sans), sans-serif;
+}
+
+/* Smooth transitions */
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* Selection color */
+::selection {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* Custom utilities */
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, var(--primary), var(--accent-foreground));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-gradient-hero {
+    background: linear-gradient(135deg, var(--background) 0%, var(--secondary) 50%, var(--accent) 100%);
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .dark .glass {
+    background: rgba(26, 24, 23, 0.8);
+  }
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+

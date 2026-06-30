@@ -1,0 +1,468 @@
+export const en = {
+  // Site Meta
+  site: {
+    name: 'Astar',
+    tagline: 'Elegant Modest Fashion',
+    description: 'Your destination for modern modest fashion',
+  },
+
+  // Navigation
+  nav: {
+    home: 'Home',
+    shop: 'Shop',
+    categories: 'Categories',
+    about: 'About',
+    contact: 'Contact',
+    wishlist: 'Wishlist',
+    cart: 'Cart',
+    profile: 'Profile',
+    orders: 'My Orders',
+    login: 'Login',
+    logout: 'Logout',
+    admin: 'Admin Panel',
+    search: 'Search products...',
+  },
+
+  // Header
+  header: {
+    search: 'Search products...',
+    searchPlaceholder: 'Search for products...',
+    toggleMenu: 'Toggle menu',
+    toggleSearch: 'Toggle search',
+    toggleTheme: 'Toggle theme',
+    toggleLanguage: 'Toggle language',
+  },
+
+  // Hero Section
+  hero: {
+    title: 'Elegant Modest Fashion',
+    subtitle: 'Discover our exclusive collection of modern modest clothing',
+    shopNow: 'Shop Now',
+    viewCollection: 'View Collection',
+  },
+
+  // Products
+  products: {
+    featured: 'Featured Products',
+    newArrivals: 'New Arrivals',
+    bestSellers: 'Best Sellers',
+    relatedProducts: 'Related Products',
+    allProducts: 'All Products',
+    addToCart: 'Add to Cart',
+    addToWishlist: 'Add to Wishlist',
+    removeFromWishlist: 'Remove from Wishlist',
+    outOfStock: 'Out of Stock',
+    inStock: 'In Stock',
+    quantity: 'Quantity',
+    price: 'Price',
+    comparePrice: 'Compare at',
+    description: 'Description',
+    specifications: 'Specifications',
+    reviews: 'Reviews',
+    noReviews: 'No reviews yet',
+    writeReview: 'Write a Review',
+    size: 'Size',
+    color: 'Color',
+    selectSize: 'Select Size',
+    selectColor: 'Select Color',
+    sku: 'SKU',
+    category: 'Category',
+    tags: 'Tags',
+    share: 'Share',
+    filterBy: 'Filter By',
+    sortBy: 'Sort By',
+    gridView: 'Grid View',
+    listView: 'List View',
+    noProducts: 'No products found',
+    showing: 'Showing',
+    of: 'of',
+    results: 'results',
+  },
+
+  // Sorting Options
+  sorting: {
+    newest: 'Newest',
+    priceAsc: 'Price: Low to High',
+    priceDesc: 'Price: High to Low',
+    popular: 'Most Popular',
+    rating: 'Highest Rated',
+  },
+
+  // Categories
+  categories: {
+    title: 'Shop by Category',
+    allCategories: 'All Categories',
+    noCategories: 'No categories found',
+  },
+
+  // Cart
+  cart: {
+    title: 'Shopping Cart',
+    empty: 'Your cart is empty',
+    continueShopping: 'Continue Shopping',
+    subtotal: 'Subtotal',
+    shipping: 'Shipping',
+    freeShipping: 'Free Shipping',
+    total: 'Total',
+    checkout: 'Proceed to Checkout',
+    remove: 'Remove',
+    clearCart: 'Clear Cart',
+    updateQuantity: 'Update Quantity',
+    items: 'items',
+    item: 'item',
+    calculateShipping: 'Calculate shipping at checkout',
+    discount: 'Discount',
+    applyCoupon: 'Apply Coupon',
+    couponPlaceholder: 'Enter coupon code',
+    apply: 'Apply',
+    removeCoupon: 'Remove',
+    freeShippingEligible: 'You qualify for free shipping!',
+    freeShippingRemaining: 'Add {amount} more for free shipping',
+  },
+
+  // Checkout
+  checkout: {
+    title: 'Checkout',
+    billingDetails: 'Billing Details',
+    shippingDetails: 'Shipping Details',
+    sameAsBilling: 'Same as billing address',
+    paymentMethod: 'Payment Method',
+    orderSummary: 'Order Summary',
+    placeOrder: 'Place Order',
+    processing: 'Processing...',
+    orderSuccess: 'Order Placed Successfully!',
+    orderSuccessMessage: 'Thank you for your order. We will contact you shortly.',
+    orderNumber: 'Order Number',
+    continueShopping: 'Continue Shopping',
+    firstName: 'First Name',
+    lastName: 'Last Name',
+    email: 'Email Address',
+    phone: 'Phone Number',
+    address: 'Street Address',
+    city: 'City',
+    state: 'State/Province',
+    country: 'Country',
+    postalCode: 'Postal Code',
+    notes: 'Order Notes',
+    notesPlaceholder: 'Special instructions for your order...',
+    cashOnDelivery: 'Cash on Delivery',
+    bankTransfer: 'Bank Transfer',
+    creditCard: 'Credit Card',
+    required: 'This field is required',
+    invalidEmail: 'Please enter a valid email',
+    invalidPhone: 'Please enter a valid phone number',
+  },
+
+  // Orders
+  orders: {
+    title: 'My Orders',
+    noOrders: 'You have no orders yet',
+    startShopping: 'Start Shopping',
+    orderNumber: 'Order Number',
+    date: 'Date',
+    status: 'Status',
+    total: 'Total',
+    actions: 'Actions',
+    viewDetails: 'View Details',
+    trackOrder: 'Track Order',
+    pending: 'Pending',
+    processing: 'Processing',
+    shipped: 'Shipped',
+    delivered: 'Delivered',
+    cancelled: 'Cancelled',
+    refunded: 'Refunded',
+  },
+
+  // User Account
+  account: {
+    title: 'My Account',
+    profile: 'Profile',
+    editProfile: 'Edit Profile',
+    changePassword: 'Change Password',
+    addresses: 'Addresses',
+    addAddress: 'Add New Address',
+    editAddress: 'Edit Address',
+    deleteAddress: 'Delete Address',
+    defaultAddress: 'Default Address',
+    setDefault: 'Set as Default',
+    name: 'Full Name',
+    email: 'Email',
+    phone: 'Phone Number',
+    currentPassword: 'Current Password',
+    newPassword: 'New Password',
+    confirmPassword: 'Confirm Password',
+    profileUpdated: 'Profile updated successfully',
+    passwordChanged: 'Password changed successfully',
+  },
+
+  // Auth
+  auth: {
+    login: 'Login',
+    register: 'Create Account',
+    loginTitle: 'Welcome Back',
+    registerTitle: 'Create Account',
+    loginSubtitle: 'Sign in to your account',
+    registerSubtitle: 'Join us today',
+    email: 'Email Address',
+    password: 'Password',
+    confirmPassword: 'Confirm Password',
+    name: 'Full Name',
+    phone: 'Phone Number',
+    forgotPassword: 'Forgot Password?',
+    rememberMe: 'Remember Me',
+    noAccount: "Don't have an account?",
+    haveAccount: 'Already have an account?',
+    signUp: 'Sign Up',
+    signIn: 'Sign In',
+    invalidCredentials: 'Invalid email or password',
+    emailRequired: 'Email is required',
+    passwordRequired: 'Password is required',
+    nameRequired: 'Name is required',
+    passwordMismatch: 'Passwords do not match',
+    emailExists: 'An account with this email already exists',
+    loginSuccess: 'Login successful!',
+    registerSuccess: 'Account created successfully!',
+    logoutSuccess: 'Logged out successfully',
+  },
+
+  // About Page
+  about: {
+    title: 'About Us',
+    subtitle: 'Our Story',
+    mission: 'Our Mission',
+    vision: 'Our Vision',
+    values: 'Our Values',
+    team: 'Our Team',
+    history: 'Our History',
+    contactUs: 'Contact Us',
+    storyTitle: 'Our Story',
+    storyDescription: 'Astar was founded with a simple mission: to provide elegant, modest fashion that empowers women to feel confident and beautiful.',
+    missionTitle: 'Our Mission',
+    missionDescription: 'To be the leading destination for modern modest fashion, offering high-quality, stylish clothing that meets the needs of contemporary women.',
+    valuesTitle: 'Our Values',
+    quality: 'Quality',
+    qualityDesc: 'We never compromise on the quality of our products.',
+    modesty: 'Modesty',
+    modestyDesc: 'We believe fashion can be both modest and stylish.',
+    service: 'Service',
+    serviceDesc: 'Customer satisfaction is our top priority.',
+  },
+
+  // Contact Page
+  contact: {
+    title: 'Contact Us',
+    subtitle: 'Get in Touch',
+    description: 'We would love to hear from you. Please fill out the form below or use our contact information.',
+    form: {
+      name: 'Your Name',
+      email: 'Your Email',
+      phone: 'Your Phone',
+      subject: 'Subject',
+      message: 'Your Message',
+      send: 'Send Message',
+      sending: 'Sending...',
+      success: 'Message sent successfully!',
+      error: 'Failed to send message. Please try again.',
+    },
+    info: {
+      title: 'Contact Information',
+      address: 'Address',
+      phone: 'Phone',
+      email: 'Email',
+      whatsapp: 'WhatsApp',
+      workingHours: 'Working Hours',
+    },
+  },
+
+  // Footer
+  footer: {
+    quickLinks: 'Quick Links',
+    customerService: 'Customer Service',
+    aboutUs: 'About Us',
+    contactUs: 'Contact Us',
+    faq: 'FAQ',
+    shippingInfo: 'Shipping Info',
+    returns: 'Returns & Exchanges',
+    privacyPolicy: 'Privacy Policy',
+    termsOfService: 'Terms of Service',
+    newsletter: {
+      title: 'Subscribe to Our Newsletter',
+      description: 'Get exclusive offers, beauty tips, and 10% off your first order',
+      placeholder: 'Your email address',
+      subscribe: 'Subscribe',
+      subscribed: 'Thank you for subscribing!',
+    },
+    followUs: 'Follow Us',
+    paymentMethods: 'Payment Methods',
+    copyright: 'All rights reserved',
+  },
+
+  // Newsletter
+  newsletter: {
+    title: 'Subscribe to Our Newsletter',
+    subtitle: 'Get exclusive offers and updates',
+    placeholder: 'Enter your email',
+    subscribe: 'Subscribe',
+    success: 'Thank you for subscribing!',
+    error: 'Failed to subscribe. Please try again.',
+  },
+
+  // Testimonials
+  testimonials: {
+    title: 'What Our Customers Say',
+    noReviews: 'No reviews yet',
+  },
+
+  // Search
+  search: {
+    title: 'Search Results',
+    placeholder: 'Search for products...',
+    noResults: 'No results found for',
+    resultsFor: 'Search results for',
+    recentSearches: 'Recent Searches',
+    popularSearches: 'Popular Searches',
+    clearHistory: 'Clear History',
+  },
+
+  // Filters
+  filters: {
+    title: 'Filters',
+    clearAll: 'Clear All',
+    apply: 'Apply Filters',
+    price: 'Price',
+    priceRange: 'Price Range',
+    category: 'Category',
+    size: 'Size',
+    color: 'Color',
+    brand: 'Brand',
+    availability: 'Availability',
+    inStockOnly: 'In Stock Only',
+    onSale: 'On Sale',
+  },
+
+  // Common
+  common: {
+    loading: 'Loading...',
+    error: 'Error',
+    success: 'Success',
+    save: 'Save',
+    cancel: 'Cancel',
+    delete: 'Delete',
+    edit: 'Edit',
+    add: 'Add',
+    update: 'Update',
+    close: 'Close',
+    back: 'Back',
+    next: 'Next',
+    previous: 'Previous',
+    yes: 'Yes',
+    no: 'No',
+    confirm: 'Confirm',
+    or: 'or',
+    and: 'and',
+    all: 'All',
+    none: 'None',
+    other: 'Other',
+    required: 'Required',
+    optional: 'Optional',
+    perPage: 'Per Page',
+    page: 'Page',
+    showing: 'Showing',
+    to: 'to',
+    of: 'of',
+    results: 'results',
+    viewAll: 'View All',
+    readMore: 'Read More',
+    readLess: 'Read Less',
+    learnMore: 'Learn More',
+    seeMore: 'See More',
+    seeAll: 'See All',
+    noResults: 'No results found',
+    tryAgain: 'Try Again',
+    refresh: 'Refresh',
+    copy: 'Copy',
+    copied: 'Copied!',
+    share: 'Share',
+    print: 'Print',
+    download: 'Download',
+    upload: 'Upload',
+    select: 'Select',
+    selectAll: 'Select All',
+    deselectAll: 'Deselect All',
+  },
+
+  // Currency
+  currency: {
+    symbol: 'EGP',
+    code: 'EGP',
+    name: 'Egyptian Pound',
+  },
+
+  // Errors
+  errors: {
+    general: 'Something went wrong. Please try again.',
+    network: 'Network error. Please check your connection.',
+    notFound: 'Page not found',
+    unauthorized: 'Unauthorized access',
+    forbidden: 'Access forbidden',
+    serverError: 'Server error. Please try again later.',
+    validation: 'Please check your input and try again.',
+  },
+
+  // Success Messages
+  success: {
+    addedToCart: 'Added to cart successfully',
+    removedFromCart: 'Removed from cart',
+    addedToWishlist: 'Added to wishlist',
+    removedFromWishlist: 'Removed from wishlist',
+    orderPlaced: 'Order placed successfully!',
+    profileUpdated: 'Profile updated successfully',
+    passwordChanged: 'Password changed successfully',
+  },
+
+  // Validation Messages
+  validation: {
+    required: 'This field is required',
+    email: 'Please enter a valid email address',
+    phone: 'Please enter a valid phone number',
+    minLength: 'Must be at least {min} characters',
+    maxLength: 'Must be no more than {max} characters',
+    min: 'Must be at least {min}',
+    max: 'Must be no more than {max}',
+    password: 'Password must contain at least 8 characters, including uppercase, lowercase, and numbers',
+    confirmPassword: 'Passwords do not match',
+  },
+
+  // Time & Date
+  time: {
+    today: 'Today',
+    yesterday: 'Yesterday',
+    thisWeek: 'This Week',
+    thisMonth: 'This Month',
+    lastMonth: 'Last Month',
+    thisYear: 'This Year',
+  },
+
+  // Accessibility
+  a11y: {
+    skipToContent: 'Skip to main content',
+    mainNavigation: 'Main navigation',
+    closeMenu: 'Close menu',
+    openMenu: 'Open menu',
+    closeDialog: 'Close dialog',
+    carousel: 'Carousel',
+    previousSlide: 'Previous slide',
+    nextSlide: 'Next slide',
+    slideOf: 'Slide {current} of {total}',
+  },
+} as const
+
+// Widen the literal value types (from `as const`) to `string` so that other
+// locale files (e.g. ar.ts) can provide their own translated strings without
+// every value triggering a "not assignable to literal" type error, while still
+// keeping the exact key structure for type-safe key lookups.
+type DeepStringify<T> = {
+  [K in keyof T]: T[K] extends string ? string : DeepStringify<T[K]>
+}
+
+export type TranslationKeys = DeepStringify<typeof en>
