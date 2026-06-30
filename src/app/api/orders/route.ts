@@ -89,6 +89,9 @@ export async function POST(request: NextRequest) {
       const product = productMap.get(item.productId)!;
       let unitPrice = product.price;
       let variantName: string | null = null;
+      let variantColor: string | null = null;
+      let variantColorHex: string | null = null;
+      let variantSize: string | null = null;
       if (item.variantId) {
         const variant = product.variants.find(v => v.id === item.variantId);
         if (!variant) {
@@ -96,6 +99,11 @@ export async function POST(request: NextRequest) {
         }
         unitPrice = variant.price ?? product.price;
         variantName = variant.name;
+        // Snapshot the chosen colour/size onto the order line so the admin
+        // always sees what the customer ordered, even if the variant changes.
+        variantColor = variant.color ?? null;
+        variantColorHex = variant.colorHex ?? null;
+        variantSize = variant.size ?? null;
       }
       const quantity = Number(item.quantity);
       return {
@@ -103,6 +111,9 @@ export async function POST(request: NextRequest) {
         variantId: item.variantId,
         productName: product.nameEn,
         variantName,
+        variantColor,
+        variantColorHex,
+        variantSize,
         price: unitPrice,
         quantity,
         total: unitPrice * quantity,

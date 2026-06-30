@@ -105,6 +105,7 @@ interface ProductVariant {
   // Stored hex for the variant colour — read back so the swatch never falls to grey
   colorHex?: string | null
   size?: string | null
+  available?: boolean
 }
 
 interface Product {
@@ -207,7 +208,7 @@ export function AdminProducts() {
     images: [] as { url: string; alt?: string }[],
     // Each colour keeps its own hex AND its own image collection
     colors: [] as { name: string; hex: string; images: { url: string; alt?: string }[] }[],
-    sizes: [] as { name: string; quantity: number }[],
+    sizes: [] as { name: string; quantity: number; available: boolean }[],
   })
 
   // Available colors and sizes for quick selection
@@ -574,7 +575,7 @@ export function AdminProducts() {
   const openEditDialog = (product: Product) => {
     // Extract unique colors and sizes from variants
     const uniqueColors = new Map<string, { name: string; hex: string; images: { url: string; alt?: string }[] }>()
-    const uniqueSizes = new Map<string, { name: string; quantity: number }>()
+    const uniqueSizes = new Map<string, { name: string; quantity: number; available: boolean }>()
 
     if (product.variants && product.variants.length > 0) {
       product.variants.forEach(variant => {
@@ -589,11 +590,19 @@ export function AdminProducts() {
             images: [],
           })
         }
-        if (variant.size && !uniqueSizes.has(variant.size)) {
-          uniqueSizes.set(variant.size, {
-            name: variant.size,
-            quantity: variant.quantity || 0,
-          })
+        if (variant.size) {
+          const existing = uniqueSizes.get(variant.size)
+          // A size is shown as available if ANY of its colour variants is available.
+          const variantAvailable = variant.available !== false
+          if (!existing) {
+            uniqueSizes.set(variant.size, {
+              name: variant.size,
+              quantity: variant.quantity || 0,
+              available: variantAvailable,
+            })
+          } else {
+            existing.available = existing.available || variantAvailable
+          }
         }
       })
     }
@@ -707,9 +716,19 @@ export function AdminProducts() {
       toast({ title: 'خطأ', description: 'هذا المقاس موجود بالفعل', variant: 'destructive' })
       return
     }
-    setFormData({ ...formData, sizes: [...formData.sizes, { name, quantity }] })
+    setFormData({ ...formData, sizes: [...formData.sizes, { name, quantity, available: true }] })
     setNewSizeName('')
     setNewSizeQuantity('0')
+  }
+
+  // Toggle a size's availability status (متوفر / غير متوفر) shown in the size guide.
+  const handleToggleSizeAvailable = (sizeName: string) => {
+    setFormData({
+      ...formData,
+      sizes: formData.sizes.map(s =>
+        s.name === sizeName ? { ...s, available: !(s.available ?? true) } : s
+      ),
+    })
   }
 
   // Remove size from product
@@ -749,7 +768,7 @@ export function AdminProducts() {
       // Generate variants from colors and sizes.
       // IMPORTANT: every colour variant carries its picked `colorHex`. This is the
       // root-cause fix for the "always grey" bug — the hex used to be dropped here.
-      const variants: { name: string; sku: string; color?: string; colorHex?: string; size?: string; quantity: number }[] = []
+      const variants: { name: string; sku: string; color?: string; colorHex?: string; size?: string; quantity: number; available?: boolean }[] = []
       
       if (formData.colors.length > 0 && formData.sizes.length > 0) {
         // Create variants for each color × size combination
@@ -763,6 +782,7 @@ export function AdminProducts() {
               colorHex: color.hex,
               size: size.name,
               quantity: size.quantity,
+              available: size.available ?? true,
             })
           })
         })
@@ -787,6 +807,7 @@ export function AdminProducts() {
             sku: variantSku,
             size: size.name,
             quantity: size.quantity,
+            available: size.available ?? true,
           })
         })
       }
@@ -1646,7 +1667,7 @@ export function AdminProducts() {
                           <div className="flex items-center gap-3">
                             <span className="font-medium">{size.name}</span>
                           </div>
-                          <div className="flex items-center gap-3">
+                          <div className="flex flex-wrap items-center justify-end gap-3">
                             <div className="flex items-center gap-2">
                               <Label className="text-sm text-muted-foreground">الكمية:</Label>
                               <Input
@@ -1657,6 +1678,27 @@ export function AdminProducts() {
                                 className="w-20 h-8"
                               />
                             </div>
+                            {/* Size guide availability toggle (متوفر / غير متوفر) */}
+                            <button
+                              type="button"
+                              onClick={() => handleToggleSizeAvailable(size.name)}
+                              className={cn(
+                                'inline-flex items-center gap-1.5 rounded-full px-3 h-8 text-xs font-medium border transition-colors',
+                                (size.available ?? true)
+                                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                                  : 'bg-muted text-muted-foreground border-border hover:bg-muted/70'
+                              )}
+                              aria-pressed={size.available ?? true}
+                              title="تغيير حالة المقاس في دليل المقاسات"
+                            >
+                              <span
+                                className={cn(
+                                  'h-2 w-2 rounded-full',
+                                  (size.available ?? true) ? 'bg-emerald-500' : 'bg-gray-400'
+                                )}
+                              />
+                              {(size.available ?? true) ? 'متوفر' : 'غير متوفر'}
+                            </button>
                             <button
                               type="button"
                               onClick={() => handleRemoveSize(size.name)}

@@ -61,7 +61,7 @@ interface ProductData {
   descriptionAr: string | null
   quantity: number
   images: { id: string; url: string; alt: string | null; color: string | null }[]
-  variants: { id: string; name: string; color: string | null; colorHex: string | null; size: string | null; price: number | null; quantity: number }[]
+  variants: { id: string; name: string; color: string | null; colorHex: string | null; size: string | null; price: number | null; quantity: number; available?: boolean }[]
   category?: { id: string; nameEn: string; nameAr: string } | null
   reviews?: { id: string; rating: number; comment: string | null; createdAt: string; user: { name: string } }[]
 }
@@ -949,8 +949,10 @@ export function ProductDetails({
                   </thead>
                   <tbody>
                     {uniqueSizes.map((size) => {
+                      // A size is "متوفر" when the admin has not marked it
+                      // unavailable AND there is stock for it.
                       const available = product.variants.some(
-                        v => v.size === size && v.quantity > 0
+                        v => v.size === size && v.available !== false && v.quantity > 0
                       )
                       return (
                         <tr key={size} className="border-b border-border/60">

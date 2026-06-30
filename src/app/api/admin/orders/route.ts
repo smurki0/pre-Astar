@@ -37,6 +37,10 @@ export async function GET(request: NextRequest) {
             select: { 
               id: true, 
               productName: true, 
+              variantName: true,
+              variantColor: true,
+              variantColorHex: true,
+              variantSize: true,
               quantity: true, 
               price: true,
               total: true 

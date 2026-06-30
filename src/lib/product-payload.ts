@@ -14,6 +14,7 @@ export type IncomingVariant = {
   color?: string | null
   size?: string | null
   colorHex?: string | null
+  available?: boolean
 }
 
 export type NormalizedImage = { url: string; alt: string; color: string | null; position: number }
@@ -25,6 +26,7 @@ export type NormalizedVariant = {
   color: string | null
   size: string | null
   colorHex: string | null
+  available: boolean
 }
 
 /**
@@ -65,5 +67,7 @@ export function normalizeVariants(variants: unknown): NormalizedVariant[] {
     color: v.color || null,
     size: v.size || null,
     colorHex: isValidHexColor(v.colorHex) ? (v.colorHex as string) : null,
+    // Defaults to available unless the admin explicitly marked it unavailable.
+    available: v.available !== false,
   }))
 }

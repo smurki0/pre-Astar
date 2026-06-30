@@ -76,6 +76,10 @@ interface Order {
   items: {
     id: string
     productName: string
+    variantName?: string | null
+    variantColor?: string | null
+    variantColorHex?: string | null
+    variantSize?: string | null
     quantity: number
     price: number
     total: number
@@ -626,7 +630,25 @@ export function AdminOrders() {
                     <div key={index} className="flex justify-between items-start gap-2 py-2 border-b border-border last:border-0">
                       <div className="min-w-0 flex-1">
                         <p className="text-sm text-foreground break-words">{item.productName}</p>
-                        <p className="text-xs text-muted-foreground">الكمية: {item.quantity}</p>
+                        {(item.variantColor || item.variantSize) && (
+                          <div className="flex flex-wrap items-center gap-1.5 mt-1">
+                            {item.variantColor && (
+                              <span className="inline-flex items-center gap-1 rounded-full border border-border bg-background px-2 py-0.5 text-[11px] text-foreground">
+                                <span
+                                  className="h-3 w-3 rounded-full border border-border"
+                                  style={{ backgroundColor: item.variantColorHex || '#CCCCCC' }}
+                                />
+                                اللون: {item.variantColor}
+                              </span>
+                            )}
+                            {item.variantSize && (
+                              <span className="inline-flex items-center rounded-full border border-border bg-background px-2 py-0.5 text-[11px] text-foreground">
+                                المقاس: {item.variantSize}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        <p className="text-xs text-muted-foreground mt-1">الكمية: {item.quantity}</p>
                       </div>
                       <p className="text-sm font-medium text-primary whitespace-nowrap">{(item.price * item.quantity).toLocaleString()} ج.م</p>
                     </div>
