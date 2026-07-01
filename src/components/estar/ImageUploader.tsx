@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
-import { csrfFetch } from '@/lib/csrf-fetch'
+import { uploadImage } from '@/lib/upload-image'
 import { MAX_PRODUCT_IMAGES } from '@/lib/constants'
 
 interface ImageUploaderProps {
@@ -49,22 +49,9 @@ export function ImageUploader({
     setError(null)
 
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('folder', folder)
+      const url = await uploadImage(file, folder)
 
-      const response = await csrfFetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to upload image')
-      }
-
-      onChange(data.url)
+      onChange(url)
       toast({
         title: 'تم الرفع',
         description: 'تم رفع الصورة بنجاح',
@@ -241,22 +228,9 @@ export function MultiImageUploader({
     setUploading(true)
 
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('folder', folder)
+      const url = await uploadImage(file, folder)
 
-      const response = await csrfFetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to upload image')
-      }
-
-      onChange([...value, { url: data.url }])
+      onChange([...value, { url }])
       toast({
         title: 'تم الرفع',
         description: 'تم رفع الصورة بنجاح',

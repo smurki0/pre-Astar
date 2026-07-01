@@ -18,29 +18,84 @@ const ALLOWED_TYPES: Record<string, string> = {
   'image/x-icon': 'ico',
   'image/vnd.microsoft.icon': 'ico',
 };
+const ALLOWED_CONTENT_TYPES = Object.keys(ALLOWED_TYPES);
 
 // Whitelist of destination folders to prevent path traversal.
 const ALLOWED_FOLDERS = new Set(['general', 'products', 'logos', 'favicons', 'seo', 'banners', 'categories']);
 
 const MAX_SIZE = 5 * 1024 * 1024; // 5MB
 
-// POST /api/upload - Upload image (admin only)
+function safeFolder(f: unknown): string {
+  return typeof f === 'string' && ALLOWED_FOLDERS.has(f) ? f : 'general';
+}
+
+// POST /api/upload
+// Two modes:
+//  1) content-type: application/json  -> Vercel Blob CLIENT upload handshake.
+//     The browser streams the file straight to Blob storage (bypassing the
+//     serverless 4.5MB request-body limit and the read-only filesystem). This
+//     route only signs/authorises the upload.
+//  2) multipart/form-data             -> server-side upload. Used for local dev
+//     (writes to public/uploads) and as a no-JS fallback.
 export async function POST(request: NextRequest) {
-  // Require an authenticated admin
+  const contentType = request.headers.get('content-type') || '';
+
+  // ---------------------------------------------------------------------
+  // Mode 1: Vercel Blob client-upload handshake (production, any file size)
+  // ---------------------------------------------------------------------
+  if (contentType.includes('application/json')) {
+    const { handleUpload } = await import('@vercel/blob/client');
+    const body = await request.json();
+
+    try {
+      const jsonResponse = await handleUpload({
+        request,
+        body,
+        onBeforeGenerateToken: async (_pathname, clientPayload) => {
+          // Only authenticated admins may obtain an upload token.
+          const authResult = await requireAdmin(request);
+          if (authResult instanceof NextResponse) {
+            throw new Error('Unauthorized');
+          }
+          const folder = safeFolder(clientPayload ? JSON.parse(clientPayload)?.folder : undefined);
+          return {
+            allowedContentTypes: ALLOWED_CONTENT_TYPES,
+            addRandomSuffix: true,
+            maximumSizeInBytes: MAX_SIZE,
+            tokenPayload: JSON.stringify({ folder }),
+          };
+        },
+        onUploadCompleted: async () => {
+          // No-op: the product/banner/etc. record is saved separately by the
+          // form once it receives the returned blob URL.
+        },
+      });
+      return NextResponse.json(jsonResponse);
+    } catch (error) {
+      // handleUpload also transparently processes the
+      // "blob.upload-completed" webhook callback from Blob storage.
+      return NextResponse.json(
+        { error: error instanceof Error ? error.message : 'Upload authorisation failed' },
+        { status: 400 }
+      );
+    }
+  }
+
+  // ---------------------------------------------------------------------
+  // Mode 2: multipart server-side upload (local dev / fallback)
+  // ---------------------------------------------------------------------
   const authResult = await requireAdmin(request);
   if (authResult instanceof NextResponse) return authResult;
 
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
-    const requestedFolder = (formData.get('folder') as string) || 'general';
-    const folder = ALLOWED_FOLDERS.has(requestedFolder) ? requestedFolder : 'general';
+    const folder = safeFolder(formData.get('folder'));
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
-    // Validate file type and derive a safe extension from the MIME type
     const extension = ALLOWED_TYPES[file.type];
     if (!extension) {
       return NextResponse.json(
@@ -49,7 +104,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file size (max 5MB)
     if (file.size > MAX_SIZE) {
       return NextResponse.json({ error: 'File too large. Maximum size is 5MB' }, { status: 400 });
     }
@@ -58,49 +112,26 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // ---------------------------------------------------------------------
-    // Storage strategy
-    // ---------------------------------------------------------------------
-    // On Vercel (and any serverless host) the filesystem is READ-ONLY except
-    // for /tmp, and even /tmp is wiped between invocations and never served as
-    // a static asset. Writing to public/uploads there throws EROFS and every
-    // upload fails. So when a Vercel Blob token is configured we stream the
-    // file to Blob storage and return its permanent public URL.
-    //
-    // When the token is absent (local `npm run dev`) we keep the original
-    // behaviour of writing into public/uploads so local development still works
-    // with zero configuration.
-    // ---------------------------------------------------------------------
+    // If a Blob token is configured, upload to Blob even from the multipart path.
     if (process.env.BLOB_READ_WRITE_TOKEN) {
-      // Lazy import so the dependency is only loaded when actually used.
       const { put } = await import('@vercel/blob');
       const blob = await put(`${folder}/${filename}`, buffer, {
         access: 'public',
         contentType: file.type,
         token: process.env.BLOB_READ_WRITE_TOKEN,
       });
-
-      return NextResponse.json({
-        success: true,
-        url: blob.url,
-        filename,
-        size: file.size,
-        type: file.type,
-      });
+      return NextResponse.json({ success: true, url: blob.url, filename, size: file.size, type: file.type });
     }
 
-    // --- Local development fallback: write to public/uploads ---
+    // Local development: write into public/uploads (served statically by dev server).
     const uploadDir = path.join(process.cwd(), 'public', 'uploads', folder);
     if (!existsSync(uploadDir)) {
       await mkdir(uploadDir, { recursive: true });
     }
-    const filepath = path.join(uploadDir, filename);
-    await writeFile(filepath, buffer);
-
-    const publicUrl = `/uploads/${folder}/${filename}`;
+    await writeFile(path.join(uploadDir, filename), buffer);
     return NextResponse.json({
       success: true,
-      url: publicUrl,
+      url: `/uploads/${folder}/${filename}`,
       filename,
       size: file.size,
       type: file.type,
