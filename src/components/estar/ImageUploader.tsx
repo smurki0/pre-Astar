@@ -40,8 +40,8 @@ export function ImageUploader({
     }
 
     // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setError('حجم الملف يجب أن يكون أقل من 5 ميجابايت')
+    if (file.size > 4 * 1024 * 1024) {
+      setError('حجم الملف يجب أن يكون أقل من 4 ميجابايت')
       return
     }
 
@@ -216,10 +216,10 @@ export function MultiImageUploader({
     }
 
     // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
+    if (file.size > 4 * 1024 * 1024) {
       toast({
         title: 'خطأ',
-        description: 'حجم الملف يجب أن يكون أقل من 5 ميجابايت',
+        description: 'حجم الملف يجب أن يكون أقل من 4 ميجابايت',
         variant: 'destructive',
       })
       return
