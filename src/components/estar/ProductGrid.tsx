@@ -494,7 +494,7 @@ export function ProductGrid({
 
       {/* Grid */}
 {loading ? (
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
     {Array.from({ length: itemsPerPage }).map((_, i) => (
       <ProductCardSkeleton key={i} />
     ))}
@@ -503,9 +503,9 @@ export function ProductGrid({
   <EmptyState />
 ) : (
   <div className={cn(
-    "gap-6",
+    "gap-3 sm:gap-6",
     gridView === 'grid' 
-      ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+      ? "grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       : "grid grid-cols-1 md:grid-cols-2"
   )}>
     {currentProducts.map((product) => (
