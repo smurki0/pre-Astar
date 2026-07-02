@@ -245,7 +245,7 @@ export function ReviewList({ productId, userId, className }: ReviewListProps) {
           <div className="bg-card rounded-xl p-6 border border-border">
             {/* Overall Rating */}
             <div className="text-center mb-6">
-              <div className="text-5xl font-bold text-foreground mb-2">
+              <div className="text-4xl sm:text-5xl font-bold text-foreground mb-2">
                 {stats.averageRating.toFixed(1)}
               </div>
               <div className="flex justify-center mb-1">

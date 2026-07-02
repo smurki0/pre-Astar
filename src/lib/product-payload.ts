@@ -39,9 +39,6 @@ export function normalizeImages(
 ): { error: string } | { rows: NormalizedImage[] } {
   if (images === undefined || images === null) return { rows: [] }
   if (!Array.isArray(images)) return { error: 'images must be an array' }
-  if (images.length > MAX_PRODUCT_IMAGES) {
-    return { error: `Maximum ${MAX_PRODUCT_IMAGES} images allowed per product` }
-  }
   const rows = (images as IncomingImage[])
     .filter((img) => img && typeof img.url === 'string' && img.url.trim().length > 0)
     .map((img, index) => ({
@@ -50,6 +47,21 @@ export function normalizeImages(
       color: typeof img.color === 'string' && img.color.trim() ? img.color.trim() : null,
       position: index,
     }))
+
+  // Enforce the image limit PER colour group (shared/untagged images form their
+  // own group). Each colour has its own independent allowance — there is no
+  // combined total cap across colours.
+  const countByGroup = new Map<string, number>()
+  for (const row of rows) {
+    const key = row.color ?? '__shared__'
+    const next = (countByGroup.get(key) ?? 0) + 1
+    if (next > MAX_PRODUCT_IMAGES) {
+      const label = row.color ? `colour "${row.color}"` : 'shared images'
+      return { error: `Maximum ${MAX_PRODUCT_IMAGES} images allowed for ${label}` }
+    }
+    countByGroup.set(key, next)
+  }
+
   return { rows }
 }
 

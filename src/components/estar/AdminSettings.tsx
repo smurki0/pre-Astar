@@ -1113,7 +1113,7 @@ export function AdminSettings() {
                   <CardDescription>إعدادات اللغة الافتراضية والعملة</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="space-y-2">
                       <Label>اللغة الافتراضية</Label>
                       <Select value={settings.default_language} onValueChange={(v) => updateSetting('default_language', v)}>
@@ -3673,7 +3673,7 @@ Sitemap: https://yourdomain.com/sitemap.xml`}
                   <CardDescription>ملخص سريع عن حالة أدوات التتبع</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-3 gap-4 text-sm">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
                     <div className={`rounded-lg p-4 border ${settings.google_analytics_id ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
                       <div className="flex items-center gap-2 mb-2">
                         <div className={`w-3 h-3 rounded-full ${settings.google_analytics_id ? 'bg-green-500' : 'bg-red-500'}`}></div>
