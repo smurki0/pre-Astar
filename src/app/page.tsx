@@ -112,6 +112,15 @@ function AppContent() {
   React.useEffect(() => {
     setMounted(true)
   }, [])
+
+  // Scroll to top whenever the "view" changes. The whole app lives on a single
+  // route ("/") and only swaps content via ?view= query params, so Next.js does
+  // NOT auto-reset scroll. Without this, clicking a link near the bottom changes
+  // the URL and content but leaves the viewport where it was, so it looks like
+  // the page never navigated.
+  React.useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+  }, [view, productId, adminSection])
   
   // Update filters when category param changes
   React.useEffect(() => {
