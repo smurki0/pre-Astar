@@ -5,7 +5,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/estar/ThemeProvider";
 import { I18nProvider as LanguageProvider } from "@/lib/i18n";
 import { CartDrawer } from "@/components/estar/CartDrawer";
-import { Analytics as CustomAnalytics } from "@/components/estar/Analytics";
 import { SEOHead } from "@/components/estar/SEOHead";
 import { MaintenanceChecker } from "@/components/estar/MaintenanceChecker";
 import { SiteSettingsProvider } from "@/hooks/useSiteSettings";
@@ -104,7 +103,7 @@ export default function RootLayout({
         >
           <LanguageProvider>
             <SEOHead />
-            <CustomAnalytics />
+            <Analytics />
             <SiteSettingsProvider>
               <FaviconManager />
               <SessionProvider refetchInterval={0} refetchOnWindowFocus>

@@ -124,7 +124,7 @@ export function Header() {
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between gap-4">
             {/* Mobile Menu Button */}
-            <Sheet open={isMenuOpen} onOpenChange={setMenuOpen}>
+            <Sheet open={isMenuOpen} onOpenChange={setMenuOpen} modal={false}>
               <SheetTrigger asChild className="lg:hidden">
                 <Button variant="ghost" size="icon" className="shrink-0">
                   <Menu className="h-5 w-5" />
@@ -389,7 +389,7 @@ export function Header() {
                     <span className="sr-only">{t('nav.profile')}</span>
                   </Button>
                 ) : isAuthenticated ? (
-                  <DropdownMenu>
+                  <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon">
                         <User className="h-5 w-5" />

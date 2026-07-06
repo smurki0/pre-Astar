@@ -120,6 +120,16 @@ function AppContent() {
   // the page never navigated.
   React.useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+
+    // Safeguard against the Radix "stuck body lock" bug: modal menus/dialogs
+    // (DropdownMenu, Sheet, Dialog) set `pointer-events: none` on <body> while
+    // open and clear it on close. Navigating via a <Link> inside an open menu
+    // unmounts it mid-close, so the lock can get stuck and the whole page stops
+    // responding to clicks (works only on the 2nd click). Clear it on every
+    // navigation.
+    if (typeof document !== 'undefined') {
+      document.body.style.pointerEvents = ''
+    }
   }, [view, productId, adminSection])
   
   // Update filters when category param changes
