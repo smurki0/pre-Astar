@@ -447,7 +447,7 @@ export function UserProfile({
                       <form onSubmit={profileForm.handleSubmit(handleProfileSave)} className="space-y-4">
                         <div className="flex items-center gap-4 mb-6">
                           <Avatar className="h-20 w-20 border-2 border-primary">
-                            <AvatarImage src={user?.avatar || ''} />
+                            <AvatarImage src={user?.image || ''} />
                             <AvatarFallback className="bg-primary/10 text-primary text-lg">
                               {userInitials}
                             </AvatarFallback>
@@ -568,7 +568,7 @@ export function UserProfile({
                     className="flex items-start gap-4"
                   >
                     <Avatar className="h-20 w-20 border-2 border-primary">
-                      <AvatarImage src={user?.avatar || ''} />
+                      <AvatarImage src={user?.image || ''} />
                       <AvatarFallback className="bg-primary/10 text-primary text-lg">
                         {userInitials}
                       </AvatarFallback>
