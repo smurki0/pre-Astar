@@ -10,26 +10,34 @@ import { CategoriesSection } from '@/components/estar/CategoriesSection'
 import { TestimonialsSection } from '@/components/estar/TestimonialsSection'
 import { NewsletterSection } from '@/components/estar/NewsletterSection'
 import { ProductGrid } from '@/components/estar/ProductGrid'
-import { ProductDetails } from '@/components/estar/ProductDetails'
-import { ProductFilters, type FilterState } from '@/components/estar/ProductFilters'
+import { type FilterState } from '@/components/estar/ProductFilters'
 import { PromoBanners } from '@/components/estar/PromoBanners'
-import { CheckoutForm } from '@/components/estar/CheckoutForm'
-import { AuthModal } from '@/components/estar/AuthModal'
-import { UserProfile } from '@/components/estar/UserProfile'
-import { AboutPage } from '@/components/estar/AboutPage'
-import { ContactPage } from '@/components/estar/ContactPage'
-import { AdminLayout } from '@/components/estar/AdminLayout'
-import { AdminStats } from '@/components/estar/AdminStats'
-import { AdminProducts } from '@/components/estar/AdminProducts'
-import { AdminOrders } from '@/components/estar/AdminOrders'
-import { AdminUsers } from '@/components/estar/AdminUsers'
-import { AdminDiscounts } from '@/components/estar/AdminDiscounts'
-import { AdminSettings } from '@/components/estar/AdminSettings'
-import { AdminBanners } from '@/components/estar/AdminBanners'
-import { AdminCategories } from '@/components/estar/AdminCategories'
-import { AdminContactMessages } from '@/components/estar/AdminContactMessages'
-import { AdminNewsletter } from '@/components/estar/AdminNewsletter'
-import { AdminReviews } from '@/components/estar/AdminReviews'
+// Admin dashboard is heavy (recharts, tables, dnd, editors) and only used by
+// admins. Load it lazily so normal shoppers never download this JS.
+// ssr:false keeps these out of the server bundle too. Behavior unchanged.
+import dynamic from 'next/dynamic'
+const AdminLayout = dynamic(() => import('@/components/estar/AdminLayout').then(m => m.AdminLayout), { ssr: false })
+const AdminStats = dynamic(() => import('@/components/estar/AdminStats').then(m => m.AdminStats), { ssr: false })
+const AdminProducts = dynamic(() => import('@/components/estar/AdminProducts').then(m => m.AdminProducts), { ssr: false })
+const AdminOrders = dynamic(() => import('@/components/estar/AdminOrders').then(m => m.AdminOrders), { ssr: false })
+const AdminUsers = dynamic(() => import('@/components/estar/AdminUsers').then(m => m.AdminUsers), { ssr: false })
+const AdminDiscounts = dynamic(() => import('@/components/estar/AdminDiscounts').then(m => m.AdminDiscounts), { ssr: false })
+const AdminSettings = dynamic(() => import('@/components/estar/AdminSettings').then(m => m.AdminSettings), { ssr: false })
+const AdminBanners = dynamic(() => import('@/components/estar/AdminBanners').then(m => m.AdminBanners), { ssr: false })
+const AdminCategories = dynamic(() => import('@/components/estar/AdminCategories').then(m => m.AdminCategories), { ssr: false })
+const AdminContactMessages = dynamic(() => import('@/components/estar/AdminContactMessages').then(m => m.AdminContactMessages), { ssr: false })
+const AdminNewsletter = dynamic(() => import('@/components/estar/AdminNewsletter').then(m => m.AdminNewsletter), { ssr: false })
+const AdminReviews = dynamic(() => import('@/components/estar/AdminReviews').then(m => m.AdminReviews), { ssr: false })
+
+// Secondary views (framer-motion heavy, not first paint). Lazy-loaded so the
+// home page ships less JS; each loads instantly on first navigation to it.
+const ProductDetails = dynamic(() => import('@/components/estar/ProductDetails').then(m => m.ProductDetails), { ssr: false })
+const ProductFilters = dynamic(() => import('@/components/estar/ProductFilters').then(m => m.ProductFilters), { ssr: false })
+const CheckoutForm = dynamic(() => import('@/components/estar/CheckoutForm').then(m => m.CheckoutForm), { ssr: false })
+const AuthModal = dynamic(() => import('@/components/estar/AuthModal').then(m => m.AuthModal), { ssr: false })
+const UserProfile = dynamic(() => import('@/components/estar/UserProfile').then(m => m.UserProfile), { ssr: false })
+const AboutPage = dynamic(() => import('@/components/estar/AboutPage').then(m => m.AboutPage), { ssr: false })
+const ContactPage = dynamic(() => import('@/components/estar/ContactPage').then(m => m.ContactPage), { ssr: false })
 import { CartDrawer } from '@/components/estar/CartDrawer'
 import { ThemeProvider } from '@/components/estar/ThemeProvider'
 import { I18nProvider as LanguageProvider } from '@/lib/i18n'
