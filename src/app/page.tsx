@@ -10,34 +10,26 @@ import { CategoriesSection } from '@/components/estar/CategoriesSection'
 import { TestimonialsSection } from '@/components/estar/TestimonialsSection'
 import { NewsletterSection } from '@/components/estar/NewsletterSection'
 import { ProductGrid } from '@/components/estar/ProductGrid'
-import { type FilterState } from '@/components/estar/ProductFilters'
+import { ProductDetails } from '@/components/estar/ProductDetails'
+import { ProductFilters, type FilterState } from '@/components/estar/ProductFilters'
 import { PromoBanners } from '@/components/estar/PromoBanners'
-// Admin dashboard is heavy (recharts, tables, dnd, editors) and only used by
-// admins. Load it lazily so normal shoppers never download this JS.
-// ssr:false keeps these out of the server bundle too. Behavior unchanged.
-import dynamic from 'next/dynamic'
-const AdminLayout = dynamic(() => import('@/components/estar/AdminLayout').then(m => m.AdminLayout), { ssr: false })
-const AdminStats = dynamic(() => import('@/components/estar/AdminStats').then(m => m.AdminStats), { ssr: false })
-const AdminProducts = dynamic(() => import('@/components/estar/AdminProducts').then(m => m.AdminProducts), { ssr: false })
-const AdminOrders = dynamic(() => import('@/components/estar/AdminOrders').then(m => m.AdminOrders), { ssr: false })
-const AdminUsers = dynamic(() => import('@/components/estar/AdminUsers').then(m => m.AdminUsers), { ssr: false })
-const AdminDiscounts = dynamic(() => import('@/components/estar/AdminDiscounts').then(m => m.AdminDiscounts), { ssr: false })
-const AdminSettings = dynamic(() => import('@/components/estar/AdminSettings').then(m => m.AdminSettings), { ssr: false })
-const AdminBanners = dynamic(() => import('@/components/estar/AdminBanners').then(m => m.AdminBanners), { ssr: false })
-const AdminCategories = dynamic(() => import('@/components/estar/AdminCategories').then(m => m.AdminCategories), { ssr: false })
-const AdminContactMessages = dynamic(() => import('@/components/estar/AdminContactMessages').then(m => m.AdminContactMessages), { ssr: false })
-const AdminNewsletter = dynamic(() => import('@/components/estar/AdminNewsletter').then(m => m.AdminNewsletter), { ssr: false })
-const AdminReviews = dynamic(() => import('@/components/estar/AdminReviews').then(m => m.AdminReviews), { ssr: false })
-
-// Secondary views (framer-motion heavy, not first paint). Lazy-loaded so the
-// home page ships less JS; each loads instantly on first navigation to it.
-const ProductDetails = dynamic(() => import('@/components/estar/ProductDetails').then(m => m.ProductDetails), { ssr: false })
-const ProductFilters = dynamic(() => import('@/components/estar/ProductFilters').then(m => m.ProductFilters), { ssr: false })
-const CheckoutForm = dynamic(() => import('@/components/estar/CheckoutForm').then(m => m.CheckoutForm), { ssr: false })
-const AuthModal = dynamic(() => import('@/components/estar/AuthModal').then(m => m.AuthModal), { ssr: false })
-const UserProfile = dynamic(() => import('@/components/estar/UserProfile').then(m => m.UserProfile), { ssr: false })
-const AboutPage = dynamic(() => import('@/components/estar/AboutPage').then(m => m.AboutPage), { ssr: false })
-const ContactPage = dynamic(() => import('@/components/estar/ContactPage').then(m => m.ContactPage), { ssr: false })
+import { CheckoutForm } from '@/components/estar/CheckoutForm'
+import { AuthModal } from '@/components/estar/AuthModal'
+import { UserProfile } from '@/components/estar/UserProfile'
+import { AboutPage } from '@/components/estar/AboutPage'
+import { ContactPage } from '@/components/estar/ContactPage'
+import { AdminLayout } from '@/components/estar/AdminLayout'
+import { AdminStats } from '@/components/estar/AdminStats'
+import { AdminProducts } from '@/components/estar/AdminProducts'
+import { AdminOrders } from '@/components/estar/AdminOrders'
+import { AdminUsers } from '@/components/estar/AdminUsers'
+import { AdminDiscounts } from '@/components/estar/AdminDiscounts'
+import { AdminSettings } from '@/components/estar/AdminSettings'
+import { AdminBanners } from '@/components/estar/AdminBanners'
+import { AdminCategories } from '@/components/estar/AdminCategories'
+import { AdminContactMessages } from '@/components/estar/AdminContactMessages'
+import { AdminNewsletter } from '@/components/estar/AdminNewsletter'
+import { AdminReviews } from '@/components/estar/AdminReviews'
 import { CartDrawer } from '@/components/estar/CartDrawer'
 import { ThemeProvider } from '@/components/estar/ThemeProvider'
 import { I18nProvider as LanguageProvider } from '@/lib/i18n'
@@ -120,25 +112,6 @@ function AppContent() {
   React.useEffect(() => {
     setMounted(true)
   }, [])
-
-  // Scroll to top whenever the "view" changes. The whole app lives on a single
-  // route ("/") and only swaps content via ?view= query params, so Next.js does
-  // NOT auto-reset scroll. Without this, clicking a link near the bottom changes
-  // the URL and content but leaves the viewport where it was, so it looks like
-  // the page never navigated.
-  React.useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
-
-    // Safeguard against the Radix "stuck body lock" bug: modal menus/dialogs
-    // (DropdownMenu, Sheet, Dialog) set `pointer-events: none` on <body> while
-    // open and clear it on close. Navigating via a <Link> inside an open menu
-    // unmounts it mid-close, so the lock can get stuck and the whole page stops
-    // responding to clicks (works only on the 2nd click). Clear it on every
-    // navigation.
-    if (typeof document !== 'undefined') {
-      document.body.style.pointerEvents = ''
-    }
-  }, [view, productId, adminSection])
   
   // Update filters when category param changes
   React.useEffect(() => {

@@ -5,13 +5,12 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/estar/ThemeProvider";
 import { I18nProvider as LanguageProvider } from "@/lib/i18n";
 import { CartDrawer } from "@/components/estar/CartDrawer";
-import { Analytics as LocalAnalytics } from "@/components/estar/Analytics";
+import { Analytics } from "@/components/estar/Analytics";
 import { SEOHead } from "@/components/estar/SEOHead";
 import { MaintenanceChecker } from "@/components/estar/MaintenanceChecker";
 import { SiteSettingsProvider } from "@/hooks/useSiteSettings";
 import { FaviconManager } from "@/components/estar/FaviconManager";
 import SessionProvider from "@/components/estar/SessionProvider";
-import { Analytics } from "@vercel/analytics/next"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -88,12 +87,9 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* Only the fonts actually used in globals.css (Noto Sans Arabic + Tajawal),
-            trimmed to the weights we render. Dropped the unused Cairo family and
-            the 300 weight -> fewer/smaller font files, faster first paint. */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap"
-          rel="stylesheet"
+        <link 
+          href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Noto+Sans+Arabic:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;700&display=swap" 
+          rel="stylesheet" 
         />
       </head>
       <body
@@ -107,7 +103,7 @@ export default function RootLayout({
         >
           <LanguageProvider>
             <SEOHead />
-            <LocalAnalytics />
+            <Analytics />
             <SiteSettingsProvider>
               <FaviconManager />
               <SessionProvider refetchInterval={0} refetchOnWindowFocus>

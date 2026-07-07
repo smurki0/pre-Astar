@@ -4,11 +4,7 @@
  * API enforce exactly the same rules (no drift between layers).
  */
 
-/**
- * Maximum number of images allowed per colour group, independently.
- * The shared (untagged) images are their own group, and every colour has its
- * own independent allowance of this many images — this is NOT a combined total.
- */
+/** Maximum number of images allowed per product (shared + per-colour combined). */
 export const MAX_PRODUCT_IMAGES = 10
 
 /** Maximum upload size for a single image, in bytes (5 MB). */
