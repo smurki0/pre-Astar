@@ -42,6 +42,16 @@ function useCarousel() {
   return context
 }
 
+// Read the current writing direction from the document. Embla v8 does NOT infer
+// RTL from CSS on its own — it must be told via the `direction` option. Without
+// this, when the site switches to Arabic (dir="rtl") every horizontal carousel
+// keeps computing LTR slide positions, so most slides end up translated
+// off-screen and appear "missing".
+function getDocumentDirection(): "ltr" | "rtl" {
+  if (typeof document === "undefined") return "ltr"
+  return document.documentElement.dir === "rtl" ? "rtl" : "ltr"
+}
+
 function Carousel({
   orientation = "horizontal",
   opts,
@@ -51,10 +61,32 @@ function Carousel({
   children,
   ...props
 }: React.ComponentProps<"div"> & CarouselProps) {
+  // Track the live document direction so the carousel re-initialises itself the
+  // moment the language (LTR <-> RTL) is toggled — no second click or full page
+  // refresh required.
+  const [direction, setDirection] = React.useState<"ltr" | "rtl">(
+    getDocumentDirection
+  )
+
+  React.useEffect(() => {
+    const update = () => setDirection(getDocumentDirection())
+    update()
+    const observer = new MutationObserver(update)
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["dir"],
+    })
+    return () => observer.disconnect()
+  }, [])
+
   const [carouselRef, api] = useEmblaCarousel(
     {
       ...opts,
       axis: orientation === "horizontal" ? "x" : "y",
+      // `direction` only affects the horizontal axis. Callers can still override
+      // it explicitly via `opts.direction` if they ever need to.
+      direction:
+        orientation === "vertical" ? undefined : opts?.direction ?? direction,
     },
     plugins
   )
@@ -144,7 +176,9 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
       <div
         className={cn(
           "flex",
-          orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
+          // Use logical inline-start spacing so the inter-slide gap stays correct
+          // in both LTR and RTL layouts.
+          orientation === "horizontal" ? "-ms-4" : "-mt-4 flex-col",
           className
         )}
         {...props}
@@ -163,7 +197,7 @@ function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="carousel-item"
       className={cn(
         "min-w-0 shrink-0 grow-0 basis-full",
-        orientation === "horizontal" ? "pl-4" : "pt-4",
+        orientation === "horizontal" ? "ps-4" : "pt-4",
         className
       )}
       {...props}

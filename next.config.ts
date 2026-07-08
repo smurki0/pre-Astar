@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  // standalone is only for self-hosting (Docker/VPS). On Vercel the platform
+  // provides its own adapter, so disable it there to avoid routing/size issues.
+  output: process.env.VERCEL ? undefined : "standalone",
   /* config options here */
   typescript: {
     ignoreBuildErrors: false,

@@ -700,10 +700,6 @@ export function AdminProducts() {
     }))
   }
 
-  // Live total image count (shared + every colour) used by the UI counter and limit hint
-  const totalImageCount =
-    formData.images.length + formData.colors.reduce((sum, c) => sum + c.images.length, 0)
-
   // Add size to product
   const handleAddSize = (sizeName?: string) => {
     const name = sizeName || newSizeName
@@ -822,11 +818,20 @@ export function AdminProducts() {
         ),
       ]
 
-      // Enforce the 10-image limit before hitting the API (clear, early feedback)
-      if (taggedImages.length > MAX_PRODUCT_IMAGES) {
+      // Enforce the 10-image limit PER colour group (and for the shared images)
+      // before hitting the API — each colour has its own independent allowance,
+      // there is no combined total cap across colours.
+      const sharedImageCount = formData.images.length
+      const overLimitColor = formData.colors.find(
+        (c) => c.images.length > MAX_PRODUCT_IMAGES
+      )
+      if (sharedImageCount > MAX_PRODUCT_IMAGES || overLimitColor) {
+        const groupLabel = overLimitColor
+          ? `لون "${overLimitColor.name}"`
+          : 'الصور المشتركة'
         toast({
           title: 'عدد الصور كبير جدًا',
-          description: `الحد الأقصى ${MAX_PRODUCT_IMAGES} صور لكل منتج (الصور المشتركة + صور الألوان). لديك حاليًا ${taggedImages.length}.`,
+          description: `الحد الأقصى ${MAX_PRODUCT_IMAGES} صور لـ ${groupLabel}. كل لون له ${MAX_PRODUCT_IMAGES} صور مستقلة.`,
           variant: 'destructive',
         })
         setSaving(false)
@@ -1406,7 +1411,7 @@ export function AdminProducts() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="price" className="flex items-center gap-1">
                       السعر (ج.م) <span className="text-red-500">*</span>
@@ -1729,7 +1734,7 @@ export function AdminProducts() {
                     maxImages={MAX_PRODUCT_IMAGES}
                   />
                   <p className="text-xs text-muted-foreground mt-2">
-                    الحد الأقصى {MAX_PRODUCT_IMAGES} صور لكل منتج (الصور المشتركة + صور الألوان معًا).
+                    الحد الأقصى {MAX_PRODUCT_IMAGES} صور مستقلة للصور المشتركة.
                   </p>
                 </div>
 
@@ -1739,14 +1744,9 @@ export function AdminProducts() {
                     <div className="flex items-center justify-between">
                       <h3 className="font-medium">صور خاصة بكل لون</h3>
                       <span className="text-xs text-muted-foreground">
-                        الإجمالي: {totalImageCount} / {MAX_PRODUCT_IMAGES}
+                        كل لون: حتى {MAX_PRODUCT_IMAGES} صور مستقلة
                       </span>
                     </div>
-                    {totalImageCount > MAX_PRODUCT_IMAGES && (
-                      <p className="text-xs text-red-600">
-                        تجاوزت الحد الأقصى ({MAX_PRODUCT_IMAGES} صور). يرجى حذف بعض الصور قبل الحفظ.
-                      </p>
-                    )}
                     {formData.colors.map((color) => (
                       <div key={color.name} className="rounded-lg border border-border bg-background p-3">
                         <div className="flex items-center gap-2 mb-3">

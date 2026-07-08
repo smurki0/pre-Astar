@@ -31,9 +31,7 @@ import { AdminContactMessages } from '@/components/estar/AdminContactMessages'
 import { AdminNewsletter } from '@/components/estar/AdminNewsletter'
 import { AdminReviews } from '@/components/estar/AdminReviews'
 import { CartDrawer } from '@/components/estar/CartDrawer'
-import { ThemeProvider } from '@/components/estar/ThemeProvider'
-import { I18nProvider as LanguageProvider } from '@/lib/i18n'
-import { SiteSettingsProvider, useSiteSettings } from '@/hooks/useSiteSettings'
+import { useSiteSettings } from '@/hooks/useSiteSettings'
 import { useCartStore, useWishlistStore } from '@/store'
 import { useSession } from '@/hooks/useSession'
 import { Button } from '@/components/ui/button'
@@ -112,6 +110,19 @@ function AppContent() {
   React.useEffect(() => {
     setMounted(true)
   }, [])
+
+  // Scroll to top whenever the "view" changes. The whole app lives on a single
+  // route ("/") and only swaps content via ?view= query params, so Next.js does
+  // NOT auto-reset scroll. Without this, clicking a link near the bottom changes
+  // the URL and content but leaves the viewport where it was, so it looks like
+  // the page never navigated.
+  React.useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    // NOTE: the old `document.body.style.pointerEvents = ''` band-aid was removed.
+    // The stuck body lock was a *symptom* of a crash in FaviconManager aborting
+    // React's cleanup phase (so Radix never restored pointer-events). With the
+    // real crash fixed, Radix cleans up normally and no reset is needed.
+  }, [view, productId, adminSection])
   
   // Update filters when category param changes
   React.useEffect(() => {
@@ -911,12 +922,20 @@ function OrdersPage({ navigateTo }: { navigateTo: (view: ViewType, params?: Reco
 }
 
 // Main Page Export
+//
+// ThemeProvider + LanguageProvider are ALREADY provided once in app/layout.tsx.
+// Re-wrapping them here mounted a second next-themes provider and a second
+// I18n/ThemeColorApplier, which raced each other writing to
+// document.documentElement / document.body and double-fetched /api/settings,
+// causing extra re-mounts. Removed here so there is a single source of truth.
+//
+// AppContent calls useSearchParams(), which REQUIRES a <Suspense> boundary in
+// the App Router; without it the route de-opts to client-side rendering and can
+// hydrate inconsistently (needs a refresh to settle). The boundary fixes that.
 export default function Home() {
   return (
-    <ThemeProvider>
-      <LanguageProvider>
-        <AppContent />
-      </LanguageProvider>
-    </ThemeProvider>
+    <React.Suspense fallback={null}>
+      <AppContent />
+    </React.Suspense>
   )
 }

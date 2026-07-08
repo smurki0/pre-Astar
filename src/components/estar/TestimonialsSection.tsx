@@ -211,11 +211,11 @@ export function TestimonialsSection({
               }}
               className="w-full"
             >
-              <CarouselContent className="-ml-2 md:-ml-4">
+              <CarouselContent className="-ms-2 md:-ms-4">
                 {testimonials.map((testimonial) => (
                   <CarouselItem
                     key={testimonial.id}
-                    className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3"
+                    className="ps-2 md:ps-4 md:basis-1/2 lg:basis-1/3"
                   >
                     <TestimonialCard testimonial={testimonial} />
                   </CarouselItem>

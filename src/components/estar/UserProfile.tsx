@@ -56,6 +56,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useUserStore } from '@/store';
+import { useSession } from '@/hooks/useSession';
+import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 
@@ -118,7 +120,11 @@ export function UserProfile({
   onAddressDelete,
 }: UserProfileProps) {
   const { language, isRTL, dir } = useLanguage();
-  const { user, setUser } = useUserStore();
+  // Source of truth is the NextAuth session (the app authenticates via NextAuth).
+  // The legacy zustand store is kept in sync only for backward compatibility.
+  const { user, updateSession } = useSession();
+  const { setUser } = useUserStore();
+  const { toast } = useToast();
   
   const [isEditingProfile, setIsEditingProfile] = React.useState(false);
   const [isSavingProfile, setIsSavingProfile] = React.useState(false);
@@ -222,14 +228,57 @@ export function UserProfile({
       }
 
       const { user: updated } = await res.json();
-      setUser(
-        user ? { ...user, name: updated.name, email: updated.email, phone: updated.phone } : null,
-        null
-      );
+
+      // Refresh the NextAuth session so the new data shows everywhere immediately.
+      await updateSession({
+        name: updated.name,
+        email: updated.email,
+        phone: updated.phone,
+      });
+
+      // Keep the legacy store in sync too (if it holds a user).
+      if (user) {
+        setUser(
+          {
+            id: user.id,
+            email: updated.email,
+            name: updated.name ?? null,
+            phone: updated.phone ?? null,
+            avatar: updated.avatar ?? null,
+            role: user.role,
+          },
+          null
+        );
+      }
+
+      // Reflect the saved values in the form fields.
+      profileForm.reset({
+        name: updated.name || '',
+        email: updated.email || '',
+        phone: updated.phone || '',
+      });
+
+      toast({
+        title: language === 'ar' ? 'تم الحفظ' : 'Saved',
+        description:
+          language === 'ar'
+            ? 'تم تحديث بياناتك الشخصية بنجاح'
+            : 'Your profile was updated successfully',
+      });
 
       setIsEditingProfile(false);
     } catch (error) {
-      // Surface the failure by keeping edit mode open
+      // Keep edit mode open and tell the user what went wrong.
+      toast({
+        title: language === 'ar' ? 'تعذّر الحفظ' : 'Save failed',
+        description:
+          error instanceof Error
+            ? error.message
+            : language === 'ar'
+              ? 'حدث خطأ أثناء حفظ البيانات'
+              : 'Something went wrong while saving',
+        variant: 'destructive',
+      });
     } finally {
       setIsSavingProfile(false);
     }
@@ -398,7 +447,7 @@ export function UserProfile({
                       <form onSubmit={profileForm.handleSubmit(handleProfileSave)} className="space-y-4">
                         <div className="flex items-center gap-4 mb-6">
                           <Avatar className="h-20 w-20 border-2 border-primary">
-                            <AvatarImage src={user?.avatar || ''} />
+                            <AvatarImage src={user?.image || ''} />
                             <AvatarFallback className="bg-primary/10 text-primary text-lg">
                               {userInitials}
                             </AvatarFallback>
@@ -519,7 +568,7 @@ export function UserProfile({
                     className="flex items-start gap-4"
                   >
                     <Avatar className="h-20 w-20 border-2 border-primary">
-                      <AvatarImage src={user?.avatar || ''} />
+                      <AvatarImage src={user?.image || ''} />
                       <AvatarFallback className="bg-primary/10 text-primary text-lg">
                         {userInitials}
                       </AvatarFallback>

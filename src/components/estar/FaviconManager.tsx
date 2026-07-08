@@ -29,24 +29,33 @@ export function FaviconManager() {
   React.useEffect(() => {
     if (typeof document === 'undefined') return
 
-    // Remove any existing icon links so the admin value fully takes over.
-    document
-      .querySelectorAll('link[rel~="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]')
-      .forEach((el) => el.parentNode?.removeChild(el))
-
     const type = mimeFromUrl(favicon)
-
-    const icon = document.createElement('link')
-    icon.rel = 'icon'
-    if (type) icon.type = type
     // Cache-bust so a freshly uploaded favicon shows immediately.
-    icon.href = favicon.startsWith('/uploads/') ? `${favicon}?v=${Date.now()}` : favicon
-    document.head.appendChild(icon)
+    const href = favicon.startsWith('/uploads/') ? `${favicon}?v=${Date.now()}` : favicon
 
-    const apple = document.createElement('link')
-    apple.rel = 'apple-touch-icon'
-    apple.href = icon.href
-    document.head.appendChild(apple)
+    // IMPORTANT: never removeChild() the <link> nodes that Next.js metadata and
+    // React 19 metadata hoisting inject into <head>. Doing so detaches nodes
+    // React still owns, and React's next <head> reconciliation then calls
+    // removeChild on a node whose parent is already null ->
+    // "Cannot read properties of null (reading 'removeChild')". That thrown
+    // error aborts React's commit/cleanup phase, which in turn leaves Radix's
+    // scroll-lock (pointer-events:none on <body>) stuck -> the whole UI needs a
+    // second click / refresh. Instead we own exactly two <link> nodes (by id)
+    // and only update those, leaving React-managed head nodes untouched.
+    const upsert = (id: string, rel: string) => {
+      let el = document.getElementById(id) as HTMLLinkElement | null
+      if (!el) {
+        el = document.createElement('link')
+        el.id = id
+        el.rel = rel
+        document.head.appendChild(el)
+      }
+      if (type) el.type = type
+      el.href = href
+    }
+
+    upsert('astar-managed-favicon', 'icon')
+    upsert('astar-managed-apple-icon', 'apple-touch-icon')
   }, [favicon])
 
   return null

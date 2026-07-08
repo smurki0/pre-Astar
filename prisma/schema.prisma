@@ -1,10 +1,14 @@
 generator client {
   provider = "prisma-client-js"
+  // Vercel serverless runs on RHEL/OpenSSL 3. Without this target the query
+  // engine binary can be missing at runtime ("query engine binary not found").
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // Neon POOLED connection (has -pooler) - runtime
+  directUrl = env("DIRECT_URL")   // Neon DIRECT connection (no -pooler) - migrations
 }
 
 model Address {
