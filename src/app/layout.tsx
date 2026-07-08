@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
+import { db } from "@/lib/db";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/estar/ThemeProvider";
 import { I18nProvider as LanguageProvider } from "@/lib/i18n";
 import { CartDrawer } from "@/components/estar/CartDrawer";
-import { Analytics } from "@/components/estar/Analytics";
 import { SEOHead } from "@/components/estar/SEOHead";
 import { MaintenanceChecker } from "@/components/estar/MaintenanceChecker";
 import { SiteSettingsProvider } from "@/hooks/useSiteSettings";
 import { FaviconManager } from "@/components/estar/FaviconManager";
 import SessionProvider from "@/components/estar/SessionProvider";
-
+import { Analytics } from "@vercel/analytics/next";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -22,7 +22,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
+const baseMetadata: Metadata = {
   title: {
     default: "Astar | استآر - أزياء محتشمة عصرية",
     template: "%s | Astar استآر"
@@ -42,10 +42,6 @@ export const metadata: Metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
-  },
-  icons: {
-    icon: "/favicon.svg",
-    apple: "/favicon.svg",
   },
   manifest: "/manifest.json",
   openGraph: {
@@ -76,6 +72,44 @@ export const metadata: Metadata = {
   category: "Fashion & Clothing",
   classification: "E-Commerce - Modest Fashion",
 };
+
+// The favicon is managed from Admin > Settings and stored in the `site_favicon`
+// setting. Read it on the server so the <link rel="icon"> that Next.js renders
+// into <head> already points at the admin's favicon on first paint of EVERY
+// page (fixes "old favicon still shows after refresh"). The `?v=` token is the
+// setting's updatedAt timestamp: it changes ONLY when the favicon changes, so
+// the browser reloads the icon immediately after a save yet keeps caching it the
+// rest of the time (professional cache-busting, no perf hit).
+const DEFAULT_FAVICON = "/favicon.svg";
+
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+  let favicon = DEFAULT_FAVICON;
+  let version = "";
+
+  try {
+    const row = await db.setting.findUnique({ where: { key: "site_favicon" } });
+    if (row?.value?.trim()) {
+      favicon = row.value.trim();
+      version = String(row.updatedAt.getTime());
+    }
+  } catch {
+    // DB unavailable (e.g. build time) -> fall back to the bundled default.
+  }
+
+  const href =
+    favicon.includes("?") || !version ? favicon : `${favicon}?v=${version}`;
+
+  return {
+    ...baseMetadata,
+    icons: {
+      icon: href,
+      shortcut: href,
+      apple: href,
+    },
+  };
+}
 
 export default function RootLayout({
   children,
