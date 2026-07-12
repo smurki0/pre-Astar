@@ -30,7 +30,7 @@ import { getColorHexSafe } from '@/lib/colors'
 import { useCartStore, useWishlistStore, useUserStore } from '@/store'
 import { ReviewList } from './ReviewList'
 import { RelatedProducts } from './RelatedProducts'
-import { PinchZoom } from './PinchZoom'
+import { CardZoom } from './CardZoom'
 import { useRouter } from 'next/navigation'
 import { csrfFetch } from '@/lib/csrf-fetch'
 
@@ -474,6 +474,7 @@ export function ProductDetails({
       strategy="afterInteractive"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
     />
+    <CardZoom>
     <div className={cn('bg-card rounded-2xl border border-border overflow-hidden shadow-sm', className)}>
       <div className="grid lg:grid-cols-2 gap-0">
         {/* Image Gallery */}
@@ -481,17 +482,14 @@ export function ProductDetails({
           {/* Main Image */}
           <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-card mb-4">
             {galleryImages?.[selectedImage]?.url ? (
-              <PinchZoom className="absolute inset-0">
-                <Image
-                  src={galleryImages[selectedImage].url}
-                  alt={product.nameAr}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover"
-                  priority
-                  draggable={false}
-                />
-              </PinchZoom>
+              <Image
+                src={galleryImages[selectedImage].url}
+                alt={product.nameAr}
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
+                priority
+              />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-muted">
                 <Package className="h-16 w-16 text-muted-foreground" />
@@ -940,6 +938,7 @@ export function ProductDetails({
         </Tabs>
       </div>
     </div>
+    </CardZoom>
 
       {/* Related Products */}
       <RelatedProducts 
