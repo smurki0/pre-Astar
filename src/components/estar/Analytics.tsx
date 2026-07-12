@@ -48,6 +48,9 @@ function GoogleAnalytics({ measurementId }: { measurementId: string }) {
   // Safely check if measurementId is a valid string
   const id = typeof measurementId === 'string' ? measurementId : ''
   if (!id || id.trim() === '') return null
+  // GA is already loaded once in the root layout via NEXT_PUBLIC_GA_ID; skip the
+  // duplicate here so we never fire two page_view events for the same id.
+  if (id.trim() === (process.env.NEXT_PUBLIC_GA_ID || '').trim()) return null
 
   return (
     <>

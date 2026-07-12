@@ -30,6 +30,7 @@ import { getColorHexSafe } from '@/lib/colors'
 import { useCartStore, useWishlistStore, useUserStore } from '@/store'
 import { ReviewList } from './ReviewList'
 import { RelatedProducts } from './RelatedProducts'
+import { PinchZoom } from './PinchZoom'
 import { useRouter } from 'next/navigation'
 import { csrfFetch } from '@/lib/csrf-fetch'
 
@@ -480,14 +481,17 @@ export function ProductDetails({
           {/* Main Image */}
           <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-card mb-4">
             {galleryImages?.[selectedImage]?.url ? (
-              <Image
-                src={galleryImages[selectedImage].url}
-                alt={product.nameAr}
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
-                priority
-              />
+              <PinchZoom className="absolute inset-0">
+                <Image
+                  src={galleryImages[selectedImage].url}
+                  alt={product.nameAr}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
+                  priority
+                  draggable={false}
+                />
+              </PinchZoom>
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-muted">
                 <Package className="h-16 w-16 text-muted-foreground" />

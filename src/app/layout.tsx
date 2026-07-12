@@ -1,19 +1,27 @@
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { getSiteOrigin, getSeoSettings } from "@/lib/seo";
+import Script from "next/script";
+
+// Google Analytics (GA4). Rendered here in the root layout so EVERY visitor
+// loads it on first paint. (The old client Analytics component fetched the id
+// from /api/admin/settings, an admin-only endpoint, so it silently failed for
+// normal customers and analytics never fired.)
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "G-F5PMYV91Z9";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/estar/ThemeProvider";
 import { I18nProvider as LanguageProvider } from "@/lib/i18n";
 import { CartDrawer } from "@/components/estar/CartDrawer";
-import { Analytics as EstarAnalytics } from "@/components/estar/Analytics";
+import { Analytics as CustomAnalytics } from "@/components/estar/Analytics";
 import { SEOHead } from "@/components/estar/SEOHead";
 import { MaintenanceChecker } from "@/components/estar/MaintenanceChecker";
 import { SiteSettingsProvider } from "@/hooks/useSiteSettings";
 import { FaviconManager } from "@/components/estar/FaviconManager";
 import SessionProvider from "@/components/estar/SessionProvider";
 import { Analytics } from "@vercel/analytics/next";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -183,6 +191,23 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground min-h-screen`}
       >
+        {/* Google Analytics (gtag.js) */}
+        {GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga-gtag" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_ID}');
+              `}
+            </Script>
+          </>
+        )}
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
@@ -191,7 +216,7 @@ export default function RootLayout({
         >
           <LanguageProvider>
             <SEOHead />
-            <EstarAnalytics />
+            <CustomAnalytics />
             <SiteSettingsProvider>
               <FaviconManager />
               <SessionProvider refetchInterval={0} refetchOnWindowFocus>
