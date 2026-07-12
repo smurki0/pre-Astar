@@ -20,7 +20,7 @@ import { MaintenanceChecker } from "@/components/estar/MaintenanceChecker";
 import { SiteSettingsProvider } from "@/hooks/useSiteSettings";
 import { FaviconManager } from "@/components/estar/FaviconManager";
 import SessionProvider from "@/components/estar/SessionProvider";
-import { Analytics } from "@vercel/analytics/next";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
