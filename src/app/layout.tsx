@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
+import { getSiteOrigin, getSeoSettings } from "@/lib/seo";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/estar/ThemeProvider";
 import { I18nProvider as LanguageProvider } from "@/lib/i18n";
 import { CartDrawer } from "@/components/estar/CartDrawer";
+import { Analytics as EstarAnalytics } from "@/components/estar/Analytics";
 import { SEOHead } from "@/components/estar/SEOHead";
 import { MaintenanceChecker } from "@/components/estar/MaintenanceChecker";
 import { SiteSettingsProvider } from "@/hooks/useSiteSettings";
@@ -101,8 +103,60 @@ export async function generateMetadata(): Promise<Metadata> {
   const href =
     favicon.includes("?") || !version ? favicon : `${favicon}?v=${version}`;
 
+  // Pull the admin-managed SEO settings and the real site origin so everything
+  // the admin edits in Settings -> SEO actually reaches crawlers/social cards.
+  // (Before this, those values only rendered as client-side <body> meta tags,
+  //  which most crawlers and social scrapers never see.)
+  const [s, origin] = await Promise.all([getSeoSettings(), getSiteOrigin()]);
+
+  const pick = (v?: string) => (v && v.trim() ? v.trim() : undefined);
+
+  const title = pick(s.seo_title) || (baseMetadata.title as { default: string })?.default;
+  const description = pick(s.seo_description) || (baseMetadata.description as string);
+  const keywords = pick(s.seo_keywords)
+    ? s.seo_keywords.split(",").map((k) => k.trim()).filter(Boolean)
+    : (baseMetadata.keywords as string[]);
+  const ogImage = pick(s.og_image) || pick(s.twitter_image) || pick(s.business_logo);
+  const canonical = pick(s.canonical_url) || origin;
+
+  const robotsIndex = (s.robots_index || "index, follow").includes("noindex")
+    ? { index: false, follow: false }
+    : { index: true, follow: true };
+
   return {
     ...baseMetadata,
+    metadataBase: new URL(origin),
+    title: pick(s.seo_title) ? s.seo_title : baseMetadata.title,
+    description,
+    keywords,
+    robots: {
+      ...robotsIndex,
+      googleBot: { ...robotsIndex, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
+    },
+    alternates: { canonical },
+    openGraph: {
+      ...baseMetadata.openGraph,
+      title: pick(s.og_title) || title,
+      description: pick(s.og_description) || description,
+      url: canonical,
+      type: (pick(s.og_type) as "website") || "website",
+      ...(ogImage ? { images: [{ url: ogImage, width: 1200, height: 630, alt: title }] } : {}),
+    },
+    twitter: {
+      ...baseMetadata.twitter,
+      card: (pick(s.twitter_card) as "summary_large_image") || "summary_large_image",
+      site: pick(s.twitter_site),
+      title: pick(s.twitter_title) || title,
+      description: pick(s.twitter_description) || description,
+      ...(ogImage ? { images: [ogImage] } : {}),
+    },
+    verification: {
+      google: pick(s.google_site_verification),
+      yandex: pick(s.yandex_verification),
+      other: pick(s.bing_webmaster_verification)
+        ? { "msvalidate.01": s.bing_webmaster_verification }
+        : undefined,
+    },
     icons: {
       icon: href,
       shortcut: href,
@@ -137,7 +191,7 @@ export default function RootLayout({
         >
           <LanguageProvider>
             <SEOHead />
-            <Analytics />
+            <EstarAnalytics />
             <SiteSettingsProvider>
               <FaviconManager />
               <SessionProvider refetchInterval={0} refetchOnWindowFocus>

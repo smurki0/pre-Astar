@@ -53,7 +53,7 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent 
         side={isRTL ? 'left' : 'right'} 
-        className="w-full sm:max-w-md flex flex-col p-0"
+        className="w-full sm:max-w-md flex flex-col p-0 overflow-hidden"
         dir={dir}
       >
         {/* Header */}
@@ -90,7 +90,7 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
         ) : (
           <>
             {/* Cart Items */}
-            <ScrollArea className="flex-1 px-6">
+            <ScrollArea className="flex-1 min-h-0 px-6">
               <div className="space-y-4 py-4">
                 <AnimatePresence mode="popLayout">
                   {items.map((item, index) => {
@@ -196,7 +196,7 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
             </ScrollArea>
             
             {/* Footer */}
-            <div className="border-t border-border p-6 space-y-4 bg-background">
+            <div className="shrink-0 border-t border-border p-6 space-y-4 bg-background">
               {/* Free Shipping Progress */}
               {!isEmpty && (
                 <div className="space-y-2">

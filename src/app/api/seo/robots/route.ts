@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { getSiteOriginFromRequest } from '@/lib/seo'
 
 export async function GET(request: NextRequest) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || request.headers.get('host') 
-      ? `https://${request.headers.get('host')}` 
-      : 'http://localhost:3000'
+    const baseUrl = getSiteOriginFromRequest(request)
 
     // Get custom robots.txt settings
     const settings = await db.setting.findMany({

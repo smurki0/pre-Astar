@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import Image from 'next/image'
+import Script from 'next/script'
 import {
   Heart,
   Share2,
@@ -434,8 +435,44 @@ export function ProductDetails({
     )
   }
 
+  // Product structured data (JSON-LD) -> lets Google show price, rating and
+  // stock as a rich result, a major driver of organic clicks/customers.
+  const productSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.nameAr,
+    description: product.descriptionAr || product.descriptionEn || undefined,
+    image: (galleryImages || []).map((img) => img.url).filter(Boolean),
+    ...(product.category ? { category: product.category.nameAr } : {}),
+    ...(avgRating > 0 && product.reviews?.length
+      ? {
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: Number(avgRating.toFixed(1)),
+            reviewCount: product.reviews.length,
+          },
+        }
+      : {}),
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'EGP',
+      price: currentPrice,
+      availability:
+        product.quantity > 0
+          ? 'https://schema.org/InStock'
+          : 'https://schema.org/OutOfStock',
+      url: typeof window !== 'undefined' ? window.location.href : undefined,
+    },
+  }
+
   return (
     <>
+    <Script
+      id={`product-schema-${product.id}`}
+      type="application/ld+json"
+      strategy="afterInteractive"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+    />
     <div className={cn('bg-card rounded-2xl border border-border overflow-hidden shadow-sm', className)}>
       <div className="grid lg:grid-cols-2 gap-0">
         {/* Image Gallery */}

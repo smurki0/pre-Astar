@@ -1,18 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { getSiteOriginFromRequest, buildStoreUrl } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || request.headers.get('host') 
-      ? `https://${request.headers.get('host')}` 
-      : 'http://localhost:3000'
+    const baseUrl = getSiteOriginFromRequest(request)
 
     // Get all active products
     const products = await db.product.findMany({
       where: { active: true },
-      select: { slug: true, updatedAt: true },
+      select: { id: true, updatedAt: true },
       orderBy: { updatedAt: 'desc' }
     })
 
@@ -33,9 +32,9 @@ export async function GET(request: NextRequest) {
       priority: 1.0
     })
 
-    // Products page
+    // Shop page
     urls.push({
-      loc: `${baseUrl}/products`,
+      loc: buildStoreUrl(baseUrl, 'shop'),
       lastmod: new Date().toISOString(),
       changefreq: 'daily',
       priority: 0.9
@@ -43,24 +42,24 @@ export async function GET(request: NextRequest) {
 
     // About page
     urls.push({
-      loc: `${baseUrl}/about`,
+      loc: buildStoreUrl(baseUrl, 'about'),
       lastmod: new Date().toISOString(),
       changefreq: 'monthly',
-      priority: 0.7
+      priority: 0.5
     })
 
     // Contact page
     urls.push({
-      loc: `${baseUrl}/contact`,
+      loc: buildStoreUrl(baseUrl, 'contact'),
       lastmod: new Date().toISOString(),
       changefreq: 'monthly',
-      priority: 0.7
+      priority: 0.5
     })
 
-    // Product pages
+    // Product pages (query-param SPA URLs the storefront actually serves)
     for (const product of products) {
       urls.push({
-        loc: `${baseUrl}/product/${product.slug}`,
+        loc: buildStoreUrl(baseUrl, 'product', { id: product.id }),
         lastmod: product.updatedAt.toISOString(),
         changefreq: 'weekly',
         priority: 0.8
@@ -70,10 +69,10 @@ export async function GET(request: NextRequest) {
     // Category pages
     for (const category of categories) {
       urls.push({
-        loc: `${baseUrl}/category/${category.slug}`,
+        loc: buildStoreUrl(baseUrl, 'shop', { category: category.slug }),
         lastmod: category.updatedAt.toISOString(),
         changefreq: 'weekly',
-        priority: 0.8
+        priority: 0.7
       })
     }
 

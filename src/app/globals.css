@@ -167,6 +167,19 @@
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+  /* Prevent accidental horizontal scroll on mobile (product card / long words going off-screen) */
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  /* Break long unbreakable strings (URLs, SKUs, long product names) instead of overflowing */
+  h1,
+  h2,
+  h3,
+  p {
+    overflow-wrap: break-word;
+  }
 }
 
 /* Custom scrollbar */
