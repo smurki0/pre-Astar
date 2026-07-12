@@ -478,7 +478,7 @@ export function ProductDetails({
     <div className={cn('bg-card rounded-2xl border border-border overflow-hidden shadow-sm', className)}>
       <div className="grid lg:grid-cols-2 gap-0">
         {/* Image Gallery */}
-        <div className="p-6 lg:p-8 bg-muted/30">
+        <div className="min-w-0 p-4 sm:p-6 lg:p-8 bg-muted/30">
           {/* Main Image */}
           <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-card mb-4">
             {galleryImages?.[selectedImage]?.url ? (
@@ -564,7 +564,7 @@ export function ProductDetails({
         </div>
 
         {/* Product Info */}
-        <div className="p-6 lg:p-8">
+        <div className="min-w-0 p-4 sm:p-6 lg:p-8">
           {/* Category */}
           {product.category && (
             <button 
@@ -576,7 +576,7 @@ export function ProductDetails({
           )}
 
           {/* Name */}
-          <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-2 break-words">
             {product.nameAr}
           </h1>
           <p className="text-muted-foreground mb-4">{product.nameEn}</p>
@@ -604,13 +604,13 @@ export function ProductDetails({
           )}
 
           {/* Price */}
-          <div className="flex items-center gap-4 mb-6">
-            <span className="text-3xl font-bold text-primary">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-6">
+            <span className="text-2xl sm:text-3xl font-bold text-primary">
               {formatPrice(currentPrice)} ج.م
             </span>
             {product.comparePrice && product.comparePrice > currentPrice && (
               <>
-                <span className="text-xl text-muted-foreground line-through">
+                <span className="text-lg sm:text-xl text-muted-foreground line-through">
                   {formatPrice(product.comparePrice)} ج.م
                 </span>
                 <Badge variant="secondary" className="bg-primary/20 text-primary">
@@ -646,7 +646,7 @@ export function ProductDetails({
                       onClick={() => handleColorChange(color)}
                       disabled={!isAvailable}
                       className={cn(
-                        'relative w-10 h-10 rounded-full transition-all shadow-sm',
+                        'relative w-11 h-11 rounded-full transition-all shadow-sm',
                         isSelected
                           ? 'ring-2 ring-primary ring-offset-2 ring-offset-background'
                           : 'hover:scale-110',
@@ -703,7 +703,7 @@ export function ProductDetails({
                       onClick={() => handleSizeChange(size)}
                       disabled={!isAvailable}
                       className={cn(
-                        'min-w-14 h-10 font-medium transition-all',
+                        'min-w-14 h-11 font-medium transition-all',
                         isSelected
                           ? 'bg-primary hover:bg-primary/90 text-primary-foreground border-primary'
                           : 'border-border text-foreground hover:border-primary/50 hover:text-primary',
@@ -730,7 +730,7 @@ export function ProductDetails({
                 </span>
               )}
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-3">
               <div className="flex items-center border border-border rounded-lg bg-card">
                 <Button
                   variant="ghost"
@@ -767,14 +767,14 @@ export function ProductDetails({
           <Separator className="mb-6" />
 
           {/* Action Buttons */}
-          <div className="flex gap-3 mb-6">
+          <div className="flex flex-wrap gap-3 mb-6">
             <Button
-              className="flex-1 bg-primary hover:bg-primary/90 text-white h-12 text-lg"
+              className="flex-1 min-w-0 basis-[60%] bg-primary hover:bg-primary/90 text-white h-12 text-base sm:text-lg"
               onClick={handleAddToCart}
               disabled={product.quantity === 0}
             >
-              <ShoppingCart className="h-5 w-5 ml-2" />
-              {product.quantity === 0 ? 'غير متوفر' : 'أضف للسلة'}
+              <ShoppingCart className="h-5 w-5 ml-2 shrink-0" />
+              <span className="truncate">{product.quantity === 0 ? 'غير متوفر' : 'أضف للسلة'}</span>
             </Button>
             <Button
               type="button"
@@ -801,17 +801,17 @@ export function ProductDetails({
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="text-center p-3 rounded-lg bg-secondary/50"
+                className="text-center p-2 sm:p-3 rounded-lg bg-secondary/50"
               >
                 <feature.icon className="h-6 w-6 mx-auto text-primary mb-2" />
-                <p className="text-sm font-medium text-foreground">{feature.title}</p>
+                <p className="text-xs sm:text-sm font-medium text-foreground">{feature.title}</p>
                 <p className="text-xs text-muted-foreground">{feature.desc}</p>
               </div>
             ))}
           </div>
 
           {/* Breadcrumb */}
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
             <button onClick={() => navigateTo('home')} className="hover:text-primary">
               الرئيسية
             </button>
@@ -836,28 +836,28 @@ export function ProductDetails({
       {/* Product Tabs */}
       <div className="border-t border-border">
         <Tabs defaultValue="description" className="w-full">
-          <TabsList className="w-full justify-start bg-transparent h-auto p-0 border-b border-border rounded-none">
+          <TabsList className="w-full justify-start bg-transparent h-auto p-0 border-b border-border rounded-none overflow-x-auto flex-nowrap">
             <TabsTrigger
               value="description"
-              className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-4 text-muted-foreground"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none shrink-0 whitespace-nowrap px-4 sm:px-6 py-4 text-muted-foreground"
             >
               الوصف
             </TabsTrigger>
             <TabsTrigger
               value="details"
-              className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-4 text-muted-foreground"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none shrink-0 whitespace-nowrap px-4 sm:px-6 py-4 text-muted-foreground"
             >
               التفاصيل
             </TabsTrigger>
             <TabsTrigger
               value="reviews"
-              className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-4 text-muted-foreground"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none shrink-0 whitespace-nowrap px-4 sm:px-6 py-4 text-muted-foreground"
             >
               التقييمات ({product.reviews?.length || 0})
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="description" className="p-6 lg:p-8">
+          <TabsContent value="description" className="p-4 sm:p-6 lg:p-8">
             <div className="prose prose-neutral max-w-none">
               <h3 className="text-lg font-semibold text-foreground mb-4">
                 وصف المنتج
@@ -874,7 +874,7 @@ export function ProductDetails({
             </div>
           </TabsContent>
 
-          <TabsContent value="details" className="p-6 lg:p-8">
+          <TabsContent value="details" className="p-4 sm:p-6 lg:p-8">
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <h3 className="text-lg font-semibold text-foreground mb-4">
@@ -929,7 +929,7 @@ export function ProductDetails({
             </div>
           </TabsContent>
 
-          <TabsContent value="reviews" className="p-6 lg:p-8">
+          <TabsContent value="reviews" className="p-4 sm:p-6 lg:p-8">
             <ReviewList 
               productId={product.id}
               userId={user?.id}
