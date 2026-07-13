@@ -49,26 +49,104 @@ export const colorHexMap: Record<string, string> = {
 }
 
 /**
- * Get hex color from color name or hex string
- * If input is valid hex → returns it
- * Else looks up predefined map → gray fallback
+ * Neutral last-resort swatch color. Only used when there is genuinely no
+ * stored hex AND the name is unknown. Valid custom colors always carry a
+ * stored `colorHex`, so they never reach this fallback.
  */
-export function getColorHexSafe(colorInput: string): string {
-  // Check if valid hex
-  const hexRegex = /^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/;
-  if (hexRegex.test(colorInput)) {
-    return colorInput;
-  }
-  // Lookup predefined
-  return colorHexMap[colorInput] || '#808080';
+export const DEFAULT_SWATCH_HEX = '#808080';
+
+// Accepts #RGB or #RRGGBB (case-insensitive).
+const HEX_REGEX = /^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/;
+
+/**
+ * True when `value` is a valid CSS hex color string.
+ */
+export function isHexColor(value: unknown): value is string {
+  return typeof value === 'string' && HEX_REGEX.test(value.trim());
 }
 
 /**
- * Legacy: Get hex color from color name (for backward compat)
- * Returns a default gray color if the color name is not found
+ * Resolve a single string into a hex value.
+ * - Valid hex → returned as-is (trimmed).
+ * - Known color name (Arabic/English) → mapped hex.
+ * - Otherwise → neutral default.
  */
-export function getColorHex(colorName: string): string {
-  return getColorHexSafe(colorName);
+function resolveHexOrName(input: string): string {
+  const trimmed = input.trim();
+  if (isHexColor(trimmed)) return trimmed;
+  return colorHexMap[trimmed] || DEFAULT_SWATCH_HEX;
+}
+
+/**
+ * Shape of any color-bearing object used anywhere in the app.
+ * Different layers historically used different field names; this type lets
+ * the single resolver accept all of them.
+ */
+export interface ColorLike {
+  colorHex?: string | null;
+  hex?: string | null;
+  value?: string | null;
+  code?: string | null;
+  backgroundColor?: string | null;
+  color?: string | null;
+  name?: string | null;
+  label?: string | null;
+}
+
+/**
+ * SINGLE SOURCE OF TRUTH for rendering a product color swatch.
+ *
+ * Accepts either a plain string (hex or color name) or any color-like object
+ * (variant, admin color, cart item, ...). Always prefers a STORED hex value,
+ * so a custom color added via the Color Picker / manual HEX renders exactly.
+ * Falls back to the name map only when no valid hex is present, and to a
+ * neutral default only as a last resort.
+ *
+ * Every component that renders a color swatch MUST use this helper instead of
+ * implementing its own resolution logic.
+ */
+export function getProductColorHex(
+  color: string | null | undefined | ColorLike
+): string {
+  if (color == null) return DEFAULT_SWATCH_HEX;
+
+  if (typeof color === 'string') {
+    return resolveHexOrName(color);
+  }
+
+  // 1) Prefer any field that already holds a valid stored hex.
+  const hexFields = [
+    color.colorHex,
+    color.hex,
+    color.value,
+    color.code,
+    color.backgroundColor,
+  ];
+  for (const candidate of hexFields) {
+    if (isHexColor(candidate)) return (candidate as string).trim();
+  }
+
+  // 2) Otherwise fall back to a name-like field (which may itself be a hex).
+  const nameFields = [color.color, color.name, color.label];
+  for (const candidate of nameFields) {
+    if (typeof candidate === 'string' && candidate.trim()) {
+      return resolveHexOrName(candidate);
+    }
+  }
+
+  return DEFAULT_SWATCH_HEX;
+}
+
+/**
+ * Backward-compatible wrappers. Both now delegate to the single resolver so
+ * the whole app shares one normalized color source.
+ */
+export function getColorHexSafe(colorInput: string | null | undefined): string {
+  return getProductColorHex(colorInput ?? null);
+}
+
+export function getColorHex(colorName: string | null | undefined): string {
+  return getProductColorHex(colorName ?? null);
 }
 
 /**

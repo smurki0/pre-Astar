@@ -293,3 +293,121 @@
   animation: pulse-soft 2s ease-in-out infinite;
 }
 
+
+/* ============================================================
+   WhatsApp Chat Button (floating FAB)
+   All colours / sizes / radius / shadow are driven by CSS custom
+   properties set inline from the admin config, so hover states work in
+   pure CSS with zero JS and the button never triggers layout shift.
+   ============================================================ */
+.wa-fab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-sizing: border-box;
+  min-height: var(--wa-size, 60px);
+  padding: 0 calc(var(--wa-size, 60px) / 4);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  border-radius: var(--wa-radius, 50px);
+  background-color: var(--wa-bg, #25d366);
+  color: var(--wa-fg, #ffffff);
+  box-shadow: var(--wa-shadow, 0 8px 20px rgba(0, 0, 0, 0.28));
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Icon-only variant is a perfect circle/rounded square with no text padding. */
+.wa-fab.wa-fab--icon-only {
+  width: var(--wa-size, 60px);
+  padding: 0;
+  gap: 0;
+}
+
+.wa-fab__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.wa-fab__label {
+  font-size: 0.95rem;
+}
+
+.wa-fab:hover,
+.wa-fab:focus-visible {
+  background-color: var(--wa-bg-hover, #1da851);
+  color: var(--wa-fg-hover, #ffffff);
+}
+
+/* Clear, high-contrast keyboard focus ring for accessibility. */
+.wa-fab:focus-visible {
+  outline: 3px solid var(--wa-fg, #ffffff);
+  outline-offset: 3px;
+}
+
+/* Optional hover lift/scale. */
+.wa-fab.wa-fab--hover:hover,
+.wa-fab.wa-fab--hover:focus-visible {
+  transform: scale(1.08);
+}
+
+.wa-fab.wa-fab--hover:active {
+  transform: scale(0.96);
+}
+
+/* Soft, expanding pulse ring behind the button. */
+.wa-fab.wa-fab--pulse::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: var(--wa-bg, #25d366);
+  z-index: -1;
+  animation: wa-pulse 2s ease-out infinite;
+}
+
+.wa-fab-wrapper {
+  position: fixed;
+  z-index: var(--wa-z, 40);
+}
+
+.wa-fab-wrapper .wa-fab {
+  position: relative;
+}
+
+@keyframes wa-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  70% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* Respect users who prefer reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .wa-fab,
+  .wa-fab.wa-fab--pulse::before,
+  .wa-fab.wa-fab--hover:hover {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}

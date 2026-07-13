@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { useCompareStore, type Product } from '@/store'
 import { cn } from '@/lib/utils'
-import { getColorHex } from '@/lib/colors'
+import { getProductColorHex } from '@/lib/colors'
 
 interface CompareModalProps {
   open: boolean
@@ -25,7 +25,7 @@ export function CompareModal({ open, onOpenChange }: CompareModalProps) {
     if (product.variants && product.variants.length > 0) {
       product.variants.forEach(variant => {
         if (variant.color && !uniqueColors.has(variant.color)) {
-          uniqueColors.set(variant.color, getColorHex(variant.color))
+          uniqueColors.set(variant.color, getProductColorHex(variant))
         }
       })
     }

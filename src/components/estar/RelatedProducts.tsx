@@ -9,7 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useCartStore, useWishlistStore, type Product } from '@/store'
 import { useSiteSettings } from '@/hooks/useSiteSettings'
 import { cn } from '@/lib/utils'
-import { getColorHex } from '@/lib/colors'
+import { getProductColorHex } from '@/lib/colors'
 import { useRouter } from 'next/navigation'
 import { csrfFetch } from '@/lib/csrf-fetch'
 
@@ -27,7 +27,7 @@ interface ProductResponse {
   price: number
   comparePrice: number | null
   images: { id: string; url: string; alt: string | null }[]
-  variants: { id: string; name: string; color: string | null; size: string | null; price: number | null; quantity: number }[]
+  variants: { id: string; name: string; color: string | null; colorHex: string | null; size: string | null; price: number | null; quantity: number }[]
   category?: { id: string; nameEn: string; nameAr: string }
   quantity: number
 }
@@ -54,7 +54,7 @@ function ProductCardSimple({
   if (product.variants && product.variants.length > 0) {
     product.variants.forEach(variant => {
       if (variant.color && !uniqueColors.has(variant.color)) {
-        uniqueColors.set(variant.color, getColorHex(variant.color))
+        uniqueColors.set(variant.color, getProductColorHex(variant))
       }
     })
   }

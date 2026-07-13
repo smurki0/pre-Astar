@@ -15,7 +15,7 @@ export interface Product {
   quantity: number;
   categoryId: string;
   images: { id: string; url: string; alt: string | null }[];
-  variants: { id: string; name: string; color: string | null; size: string | null; price: number | null; quantity: number }[];
+  variants: { id: string; name: string; color: string | null; colorHex: string | null; size: string | null; price: number | null; quantity: number }[];
   category?: { id: string; nameEn: string; nameAr: string };
   featured: boolean;
   active: boolean;

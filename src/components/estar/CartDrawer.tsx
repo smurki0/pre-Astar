@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from '@/components/ui/sheet'
 import { Progress } from '@/components/ui/progress'
 import { useCartStore, type Product } from '@/store'
+import { getProductColorHex } from '@/lib/colors'
 import { useLanguage } from '@/lib/i18n'
 import { useSiteSettings } from '@/hooks/useSiteSettings'
 import { cn } from '@/lib/utils'
@@ -140,7 +141,7 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
                               {variant.color && (
                                 <span
                                   className="inline-block w-3 h-3 rounded-full ml-1 align-middle border border-border"
-                                  style={{ backgroundColor: variant.color }}
+                                  style={{ backgroundColor: getProductColorHex(variant) }}
                                 />
                               )}
                             </p>

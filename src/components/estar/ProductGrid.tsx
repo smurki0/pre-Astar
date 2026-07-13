@@ -18,7 +18,7 @@ import { CompareModal } from './CompareModal'
 import { useSiteSettings } from '@/hooks/useSiteSettings'
 import type { FilterState } from './ProductFilters'
 import { cn } from '@/lib/utils'
-import { getColorHex } from '@/lib/colors'
+import { getProductColorHex } from '@/lib/colors'
 import { csrfFetch } from '@/lib/csrf-fetch'
 
 // Map filter color IDs to Arabic color names (for API filtering)
@@ -49,7 +49,7 @@ interface ProductResponse {
   price: number
   comparePrice: number | null
   images: { id: string; url: string; alt: string | null }[]
-  variants: { id: string; name: string; color: string | null; size: string | null; price: number | null; quantity: number }[]
+  variants: { id: string; name: string; color: string | null; colorHex: string | null; size: string | null; price: number | null; quantity: number }[]
   category?: { id: string; nameEn: string; nameAr: string }
   quantity: number
 }
@@ -181,7 +181,7 @@ function ProductCard({
           const uniqueColors = new Map<string, string>()
           product.variants.forEach(variant => {
             if (variant.color && !uniqueColors.has(variant.color)) {
-              uniqueColors.set(variant.color, getColorHex(variant.color))
+              uniqueColors.set(variant.color, getProductColorHex(variant))
             }
           })
           const colorsArray = Array.from(uniqueColors.entries())

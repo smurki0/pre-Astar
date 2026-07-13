@@ -14,12 +14,15 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/estar/ThemeProvider";
 import { I18nProvider as LanguageProvider } from "@/lib/i18n";
 import { CartDrawer } from "@/components/estar/CartDrawer";
-import { Analytics } from "@/components/estar/Analytics";
+import { Analytics as CustomAnalytics } from "@/components/estar/Analytics";
 import { SEOHead } from "@/components/estar/SEOHead";
 import { MaintenanceChecker } from "@/components/estar/MaintenanceChecker";
 import { SiteSettingsProvider } from "@/hooks/useSiteSettings";
+import { WhatsAppSettingsProvider } from "@/hooks/useWhatsAppSettings";
+import { WhatsAppButton } from "@/components/estar/WhatsAppButton";
 import { FaviconManager } from "@/components/estar/FaviconManager";
 import SessionProvider from "@/components/estar/SessionProvider";
+import { Analytics } from "@vercel/analytics/next"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -215,17 +218,22 @@ export default function RootLayout({
         >
           <LanguageProvider>
             <SEOHead />
-            <Analytics />
+            <CustomAnalytics />
             <SiteSettingsProvider>
               <FaviconManager />
-              <SessionProvider refetchInterval={0} refetchOnWindowFocus>
-                <MaintenanceChecker>
-                  {children}
-                <Toaster />
+              <WhatsAppSettingsProvider>
+                <SessionProvider refetchInterval={0} refetchOnWindowFocus>
+                  <MaintenanceChecker>
+                    {children}
+                  <Toaster />
 
 
-                </MaintenanceChecker>
-              </SessionProvider>
+                  </MaintenanceChecker>
+                </SessionProvider>
+                {/* Floating WhatsApp chat button - fully managed from Admin > WhatsApp.
+                    Self-hides on the admin dashboard and per the admin's visibility rules. */}
+                <WhatsAppButton />
+              </WhatsAppSettingsProvider>
             </SiteSettingsProvider>
           </LanguageProvider>
         </ThemeProvider>

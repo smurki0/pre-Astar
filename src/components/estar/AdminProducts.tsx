@@ -82,7 +82,7 @@ import { cn } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
 import { MultiImageUploader } from './ImageUploader'
 import { csrfFetch } from '@/lib/csrf-fetch'
-import { getColorHexSafe } from '@/lib/colors'
+import { getProductColorHex } from '@/lib/colors'
 import { MAX_PRODUCT_IMAGES, isValidHexColor } from '@/lib/constants'
 import { logAdminAction } from '@/utils/adminAudit'
 
@@ -582,11 +582,8 @@ export function AdminProducts() {
         if (variant.color && !uniqueColors.has(variant.color)) {
           uniqueColors.set(variant.color, {
             name: variant.color,
-            // Prefer the persisted hex; only fall back to the name map when it is
-            // genuinely missing/invalid. This is what stops the "always grey" bug.
-            hex: isValidHexColor(variant.colorHex)
-              ? (variant.colorHex as string)
-              : getColorHexSafe(variant.color),
+            // Single source of truth: prefers stored hex, falls back to name map.
+            hex: getProductColorHex(variant),
             images: [],
           })
         }

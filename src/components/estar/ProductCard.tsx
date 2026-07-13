@@ -7,7 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { getColorHexSafe } from '@/lib/colors';
+import { getProductColorHex } from '@/lib/colors';
 
 export interface Product {
   id: string;
@@ -60,11 +60,8 @@ export function ProductCard({
   if (product.variants && product.variants.length > 0) {
     product.variants.forEach(variant => {
       if (variant.color) {
-        // Prefer the stored hex; fall back to the name map only when missing/invalid
-        const hex = variant.colorHex && /^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(variant.colorHex)
-          ? variant.colorHex
-          : getColorHexSafe(variant.color);
-        uniqueColors.set(variant.color, hex);
+        // Single source of truth: prefers stored hex, falls back to name map.
+        uniqueColors.set(variant.color, getProductColorHex(variant));
       }
       if (variant.size) {
         uniqueSizes.add(variant.size);

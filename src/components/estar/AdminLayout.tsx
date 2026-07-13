@@ -27,6 +27,7 @@ import {
   UserPlus,
   AlertTriangle,
   Star,
+  MessageCircle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -162,6 +163,14 @@ const navItems = [
     icon: MailOpen,
     href: '/?view=admin&section=newsletter',
     section: 'newsletter',
+    badge: null,
+  },
+  {
+    title: 'واتساب',
+    titleEn: 'WhatsApp',
+    icon: MessageCircle,
+    href: '/?view=admin&section=whatsapp',
+    section: 'whatsapp',
     badge: null,
   },
   {

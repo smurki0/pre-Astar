@@ -30,6 +30,7 @@ import { AdminCategories } from '@/components/estar/AdminCategories'
 import { AdminContactMessages } from '@/components/estar/AdminContactMessages'
 import { AdminNewsletter } from '@/components/estar/AdminNewsletter'
 import { AdminReviews } from '@/components/estar/AdminReviews'
+import { AdminWhatsApp } from '@/components/estar/AdminWhatsApp'
 import { CartDrawer } from '@/components/estar/CartDrawer'
 import { useSiteSettings } from '@/hooks/useSiteSettings'
 import { useCartStore, useWishlistStore } from '@/store'
@@ -70,7 +71,7 @@ type ViewType =
   | 'orders' 
   | 'admin'
 
-type AdminSection = 'dashboard' | 'products' | 'orders' | 'users' | 'discounts' | 'settings' | 'banners' | 'categories' | 'contact' | 'newsletter' | 'reviews'
+type AdminSection = 'dashboard' | 'products' | 'orders' | 'users' | 'discounts' | 'settings' | 'banners' | 'categories' | 'contact' | 'newsletter' | 'reviews' | 'whatsapp'
 
 // Main App Component
 function AppContent() {
@@ -169,6 +170,7 @@ function AppContent() {
           {adminSection === 'contact' && <AdminContactMessages />}
           {adminSection === 'newsletter' && <AdminNewsletter />}
           {adminSection === 'reviews' && <AdminReviews />}
+          {adminSection === 'whatsapp' && <AdminWhatsApp />}
         </AdminLayout>
       )
     }

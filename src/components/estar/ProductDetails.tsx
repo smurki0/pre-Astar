@@ -26,7 +26,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
-import { getColorHexSafe } from '@/lib/colors'
+import { getProductColorHex, getColorHexSafe } from '@/lib/colors'
 import { useCartStore, useWishlistStore, useUserStore } from '@/store'
 import { ReviewList } from './ReviewList'
 import { RelatedProducts } from './RelatedProducts'
@@ -329,9 +329,7 @@ export function ProductDetails({
     const map: Record<string, string> = {}
     product?.variants?.forEach(v => {
       if (v.color && !map[v.color]) {
-        map[v.color] = v.colorHex && /^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(v.colorHex)
-          ? v.colorHex
-          : getColorHexSafe(v.color)
+        map[v.color] = getProductColorHex(v)
       }
     })
     return map
