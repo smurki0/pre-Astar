@@ -78,12 +78,12 @@ const values = [
 ]
 
 const galleryImages = [
-  { src: '/images/gallery-1.jpg', altEn: 'Elegant abaya collection', altAr: 'مجموعة عبايات أنيقة' },
+  { src: 'https://i.postimg.cc/26qyf4v9/Gemini-Generated-Image-nc4ppcnc4ppcnc4p.png', altEn: 'Elegant abaya collection', altAr: 'مجموعة عبايات أنيقة' },
   { src: '/images/gallery-2.jpg', altEn: 'Modern hijab styles', altAr: 'أشكال حجاب عصرية' },
-  { src: '/images/gallery-3.jpg', altEn: 'Premium fabric details', altAr: 'تفاصيل الأقمشة الفاخرة' },
-  { src: '/images/gallery-4.jpg', altEn: 'Studio photoshoot', altAr: 'تصوير الاستوديو' },
+  { src: 'https://i.postimg.cc/DZw3BHsp/Gemini-Generated-Image-qc2ol9qc2ol9qc2o.png', altEn: 'Premium fabric details', altAr: 'تفاصيل الأقمشة الفاخرة' },
+  { src: 'https://i.postimg.cc/XqhB1FW0/Gemini-Generated-Image-19t71u19t71u19t7.png', altEn: 'Studio photoshoot', altAr: 'تصوير الاستوديو' },
   { src: '/images/gallery-5.jpg', altEn: 'New arrivals showcase', altAr: 'عرض الوصول الجديد' },
-  { src: '/images/gallery-6.jpg', altEn: 'Seasonal collection', altAr: 'مجموعة الموسم' },
+  { src: 'https://i.postimg.cc/hGZvwCzq/Gemini-Generated-Image-9rel8q9rel8q9rel.png', altEn: 'Seasonal collection', altAr: 'مجموعة الموسم' },
 ]
 
 export function AboutPage() {
@@ -148,8 +148,8 @@ export function AboutPage() {
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
                   {language === 'ar'
-                    ? 'تأسست استآر في عام 2020 برؤية واضحة: توفير ملابس محتشمة وأنيقة للمرأة المعاصرة التي تبحث عن التوازن بين الأناقة والحياء.'
-                    : 'Astar was founded in 2020 with a clear vision: to provide modest, elegant clothing for the contemporary woman seeking balance between style and modesty.'}
+                    ? 'تأسست استآر في عام 2006 برؤية واضحة: توفير ملابس محتشمة وأنيقة للمرأة المعاصرة التي تبحث عن التوازن بين الأناقة والحياء.'
+                    : 'Astar was founded in 2006 with a clear vision: to provide modest, elegant clothing for the contemporary woman seeking balance between style and modesty.'}
                 </p>
                 <p>
                   {language === 'ar'
@@ -374,7 +374,7 @@ export function AboutPage() {
             {[
               { value: '10K+', labelEn: 'Happy Customers', labelAr: 'عميلة سعيدة' },
               { value: '500+', labelEn: 'Products', labelAr: 'منتج' },
-              { value: '15+', labelEn: 'Countries', labelAr: 'دولة' },
+              { value: '5+', labelEn: 'Countries', labelAr: 'دولة' },
               { value: '4.9', labelEn: 'Average Rating', labelAr: 'تقييم متوسط' },
             ].map((stat, index) => (
               <motion.div
