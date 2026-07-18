@@ -28,7 +28,7 @@ const teamMembers = [
     nameAr: ' م/محمد إبراهيم',
     roleEn: 'Software Engineer',
     roleAr: 'مهندس برمجيات ',
-    image: 'https://i.postimg.cc/QdqWymZR/owner-(1).png',
+    image: 'https://i.postimg.cc/xT7RJJW6/IMG-20250523-014150-540.jpg',
   },
   {
     nameEn: 'Eng/Belal Mohamed',
