@@ -378,7 +378,7 @@ export function ProductDetails({
   }, [showSizeGuide])
 
   const features = [
-    { icon: Truck, title: 'شحن مجاني', desc: 'للطلبات فوق 200 ج.م' },
+    { icon: Truck, title: 'شحن مجاني', desc: 'للطلبات فوق 2000 ج.م' },
     { icon: RotateCcw, title: 'إرجاع مجاني', desc: 'خلال 14 يوم' },
     { icon: ShieldCheck, title: 'ضمان الجودة', desc: 'منتجات أصلية 100%' },
   ]
